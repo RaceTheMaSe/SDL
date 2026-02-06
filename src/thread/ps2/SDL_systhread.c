@@ -75,7 +75,7 @@ bool SDL_SYS_CreateThread(SDL_Thread *thread,
     // Create EE Thread
     eethread.attr = 0;
     eethread.option = 0;
-    eethread.func = &childThread;
+    *(SDL_FunctionPointer*)&eethread.func = (SDL_FunctionPointer)&childThread;
     eethread.stack = SDL_malloc(stack_size);
     eethread.stack_size = stack_size;
     eethread.gp_reg = &_gp;
@@ -90,7 +90,7 @@ bool SDL_SYS_CreateThread(SDL_Thread *thread,
     sema.init_count = 0;
     sema.max_count = 1;
     sema.option = 0;
-    thread->endfunc = (void *)CreateSema(&sema);
+    thread->endfunc = (SDL_FunctionPointer)CreateSema(&sema);
 
     if (StartThread(thread->handle, thread) < 0) {
         return SDL_SetError("StartThread() failed");

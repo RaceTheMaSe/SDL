@@ -175,10 +175,10 @@ SDL_Condition *SDL_CreateCondition(void)
         {
             HMODULE kernel32 = GetModuleHandle(TEXT("kernel32.dll"));
             if (kernel32) {
-                pWakeConditionVariable = (pfnWakeConditionVariable)GetProcAddress(kernel32, "WakeConditionVariable");
-                pWakeAllConditionVariable = (pfnWakeAllConditionVariable)GetProcAddress(kernel32, "WakeAllConditionVariable");
-                pSleepConditionVariableSRW = (pfnSleepConditionVariableSRW)GetProcAddress(kernel32, "SleepConditionVariableSRW");
-                pSleepConditionVariableCS = (pfnSleepConditionVariableCS)GetProcAddress(kernel32, "SleepConditionVariableCS");
+                *(FARPROC*)&pWakeConditionVariable = GetProcAddress(kernel32, "WakeConditionVariable");
+                *(FARPROC*)&pWakeAllConditionVariable = GetProcAddress(kernel32, "WakeAllConditionVariable");
+                *(FARPROC*)&pSleepConditionVariableSRW = GetProcAddress(kernel32, "SleepConditionVariableSRW");
+                *(FARPROC*)&pSleepConditionVariableCS = GetProcAddress(kernel32, "SleepConditionVariableCS");
                 if (pWakeConditionVariable && pWakeAllConditionVariable && pSleepConditionVariableSRW && pSleepConditionVariableCS) {
                     // Use the Windows provided API
                     impl = &SDL_cond_impl_cv;

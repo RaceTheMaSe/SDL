@@ -90,15 +90,15 @@ bool WIN_LoadXInputDLL(void)
     s_XInputDLLRefCount = 1;
 
     // 100 is the ordinal for _XInputGetStateEx, which returns the same struct as XinputGetState, but with extra data in wButtons for the guide button, we think...
-    SDL_XInputGetState = (XInputGetState_t)GetProcAddress(s_pXInputDLL, (LPCSTR)100);
+    *(FARPROC*)&SDL_XInputGetState = GetProcAddress(s_pXInputDLL, (LPCSTR)100);
     if (!SDL_XInputGetState) {
-        SDL_XInputGetState = (XInputGetState_t)GetProcAddress(s_pXInputDLL, "XInputGetState");
+        *(FARPROC*)&SDL_XInputGetState = GetProcAddress(s_pXInputDLL, "XInputGetState");
     }
-    SDL_XInputSetState = (XInputSetState_t)GetProcAddress(s_pXInputDLL, "XInputSetState");
-    SDL_XInputGetCapabilities = (XInputGetCapabilities_t)GetProcAddress(s_pXInputDLL, "XInputGetCapabilities");
+    *(FARPROC*)&SDL_XInputSetState = GetProcAddress(s_pXInputDLL, "XInputSetState");
+    *(FARPROC*)&SDL_XInputGetCapabilities = GetProcAddress(s_pXInputDLL, "XInputGetCapabilities");
     // 108 is the ordinal for _XInputGetCapabilitiesEx, which additionally returns VID/PID of the controller.
-    SDL_XInputGetCapabilitiesEx = (XInputGetCapabilitiesEx_t)GetProcAddress(s_pXInputDLL, (LPCSTR)108);
-    SDL_XInputGetBatteryInformation = (XInputGetBatteryInformation_t)GetProcAddress(s_pXInputDLL, "XInputGetBatteryInformation");
+    *(FARPROC*)&SDL_XInputGetCapabilitiesEx = GetProcAddress(s_pXInputDLL, (LPCSTR)108);
+    *(FARPROC*)&SDL_XInputGetBatteryInformation = GetProcAddress(s_pXInputDLL, "XInputGetBatteryInformation");
     if (!SDL_XInputGetState || !SDL_XInputSetState || !SDL_XInputGetCapabilities) {
         WIN_UnloadXInputDLL();
         return false;

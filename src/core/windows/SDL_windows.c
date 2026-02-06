@@ -238,7 +238,8 @@ HRESULT
 WIN_RoInitialize(void)
 {
     typedef HRESULT(WINAPI * RoInitialize_t)(RO_INIT_TYPE initType);
-    RoInitialize_t RoInitializeFunc = (RoInitialize_t)WIN_LoadComBaseFunction("RoInitialize");
+    RoInitialize_t RoInitializeFunc;
+    *(FARPROC*)&RoInitializeFunc = WIN_LoadComBaseFunction("RoInitialize");
     if (RoInitializeFunc) {
         // RO_INIT_SINGLETHREADED is equivalent to COINIT_APARTMENTTHREADED
         HRESULT hr = RoInitializeFunc(RO_INIT_SINGLETHREADED);
@@ -299,7 +300,8 @@ static BOOL IsWindowsBuildVersionAtLeast(DWORD dwBuildNumber)
         return false;
     }
     // There is no function to get Windows build number, so let's get it here via RtlGetVersion
-    RtlGetVersion_t RtlGetVersionFunc = (RtlGetVersion_t)GetProcAddress(ntdll, "RtlGetVersion");
+    RtlGetVersion_t RtlGetVersionFunc;
+    *(FARPROC*)&RtlGetVersionFunc = GetProcAddress(ntdll, "RtlGetVersion");
     NT_OSVERSIONINFOW os_info;
     os_info.dwOSVersionInfoSize = sizeof(NT_OSVERSIONINFOW);
     os_info.dwBuildNumber = 0;
@@ -504,16 +506,21 @@ void WIN_UpdateDarkModeForHWND(HWND hwnd)
     if (!uxtheme) {
         return;
     }
-    RefreshImmersiveColorPolicyState_t RefreshImmersiveColorPolicyStateFunc = (RefreshImmersiveColorPolicyState_t)GetProcAddress(uxtheme, MAKEINTRESOURCEA(104));
-    ShouldAppsUseDarkMode_t ShouldAppsUseDarkModeFunc = (ShouldAppsUseDarkMode_t)GetProcAddress(uxtheme, MAKEINTRESOURCEA(132));
-    AllowDarkModeForWindow_t AllowDarkModeForWindowFunc = (AllowDarkModeForWindow_t)GetProcAddress(uxtheme, MAKEINTRESOURCEA(133));
+    RefreshImmersiveColorPolicyState_t RefreshImmersiveColorPolicyStateFunc;
+    *(FARPROC*)&RefreshImmersiveColorPolicyStateFunc = GetProcAddress(uxtheme, MAKEINTRESOURCEA(104));
+    ShouldAppsUseDarkMode_t ShouldAppsUseDarkModeFunc;
+    *(FARPROC*)&ShouldAppsUseDarkModeFunc = GetProcAddress(uxtheme, MAKEINTRESOURCEA(132));
+    AllowDarkModeForWindow_t AllowDarkModeForWindowFunc;
+    *(FARPROC*)&AllowDarkModeForWindowFunc = GetProcAddress(uxtheme, MAKEINTRESOURCEA(133));
     if (!IsWindowsBuildVersionAtLeast(18362)) {
-        AllowDarkModeForApp_t AllowDarkModeForAppFunc = (AllowDarkModeForApp_t)GetProcAddress(uxtheme, MAKEINTRESOURCEA(135));
+        AllowDarkModeForApp_t AllowDarkModeForAppFunc;
+        *(FARPROC*)&AllowDarkModeForAppFunc = GetProcAddress(uxtheme, MAKEINTRESOURCEA(135));
         if (AllowDarkModeForAppFunc) {
             AllowDarkModeForAppFunc(true);
         }
     } else {
-        SetPreferredAppMode_t SetPreferredAppModeFunc = (SetPreferredAppMode_t)GetProcAddress(uxtheme, MAKEINTRESOURCEA(135));
+        SetPreferredAppMode_t SetPreferredAppModeFunc;
+        *(FARPROC*)&SetPreferredAppModeFunc = GetProcAddress(uxtheme, MAKEINTRESOURCEA(135));
         if (SetPreferredAppModeFunc) {
             SetPreferredAppModeFunc(UXTHEME_APPMODE_ALLOW_DARK);
         }
@@ -537,7 +544,8 @@ void WIN_UpdateDarkModeForHWND(HWND hwnd)
     } else {
         HMODULE user32 = GetModuleHandle(TEXT("user32.dll"));
         if (user32) {
-            SetWindowCompositionAttribute_t SetWindowCompositionAttributeFunc = (SetWindowCompositionAttribute_t)GetProcAddress(user32, "SetWindowCompositionAttribute");
+            SetWindowCompositionAttribute_t SetWindowCompositionAttributeFunc;
+            *(FARPROC*)&SetWindowCompositionAttributeFunc = GetProcAddress(user32, "SetWindowCompositionAttribute");
             if (SetWindowCompositionAttributeFunc) {
                 WINDOWCOMPOSITIONATTRIBDATA data = { WCA_USEDARKMODECOLORS, &value, sizeof(value) };
                 SetWindowCompositionAttributeFunc(hwnd, &data);

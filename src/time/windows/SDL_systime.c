@@ -92,7 +92,7 @@ bool SDL_GetCurrentTime(SDL_Time *ticks)
     if (!pGetSystemTimePreciseAsFileTime && !load_attempted) {
         HMODULE kernel32 = GetModuleHandle(TEXT("kernel32.dll"));
         if (kernel32) {
-            pGetSystemTimePreciseAsFileTime = (pfnGetSystemTimePreciseAsFileTime)GetProcAddress(kernel32, "GetSystemTimePreciseAsFileTime");
+            *(FARPROC*)&pGetSystemTimePreciseAsFileTime = GetProcAddress(kernel32, "GetSystemTimePreciseAsFileTime");
         }
         load_attempted = true;
     }

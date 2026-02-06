@@ -796,7 +796,7 @@ static HRESULT D3D12_CreateDeviceResources(SDL_Renderer *renderer)
         HMODULE kernel32 = GetModuleHandle(TEXT("kernel32.dll"));
         pCreateEventExW = NULL;
         if (kernel32) {
-            pCreateEventExW = (pfnCreateEventExW)GetProcAddress(kernel32, "CreateEventExW");
+            *(FARPROC*)&pCreateEventExW = GetProcAddress(kernel32, "CreateEventExW");
         }
     }
 #endif

@@ -313,8 +313,8 @@ SDL_Semaphore *SDL_CreateSemaphore(Uint32 initial_value)
             HMODULE synch120 = GetModuleHandle(TEXT("api-ms-win-core-synch-l1-2-0.dll"));
             if (synch120) {
                 // Try to load required functions provided by Win 8 or newer
-                pWaitOnAddress = (pfnWaitOnAddress)GetProcAddress(synch120, "WaitOnAddress");
-                pWakeByAddressSingle = (pfnWakeByAddressSingle)GetProcAddress(synch120, "WakeByAddressSingle");
+                *(FARPROC*)&pWaitOnAddress = GetProcAddress(synch120, "WaitOnAddress");
+                *(FARPROC*)&pWakeByAddressSingle = GetProcAddress(synch120, "WakeByAddressSingle");
 
                 if (pWaitOnAddress && pWakeByAddressSingle) {
                     impl = &SDL_sem_impl_atom;

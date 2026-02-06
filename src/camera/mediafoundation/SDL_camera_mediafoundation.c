@@ -1094,7 +1094,7 @@ static bool MEDIAFOUNDATION_Init(SDL_CameraDriverImpl *impl)
     }
 
     bool okay = true;
-    #define LOADSYM(lib, fn) if (okay) { p##fn = (pfn##fn) GetProcAddress(lib, #fn); if (!p##fn) { okay = false; } }
+    #define LOADSYM(lib, fn) if (okay) { *(FARPROC*)&p##fn = GetProcAddress(lib, #fn); if (!p##fn) { okay = false; } }
     LOADSYM(mf, MFEnumDeviceSources);
     LOADSYM(mf, MFCreateDeviceSource);
     LOADSYM(mfplat, MFStartup);

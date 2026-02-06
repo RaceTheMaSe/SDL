@@ -12547,10 +12547,9 @@ static Uint8 VULKAN_INTERNAL_CreateLogicalDevice(
 
     // Load vkDevice entry points
 
-#define VULKAN_DEVICE_FUNCTION(func)                    \
-    renderer->func = (PFN_##func)                       \
-                         renderer->vkGetDeviceProcAddr( \
-                             renderer->logicalDevice,   \
+#define VULKAN_DEVICE_FUNCTION(func)                                       \
+    *(PFN_vkVoidFunction*)&renderer->func = renderer->vkGetDeviceProcAddr( \
+                             renderer->logicalDevice,                      \
                              #func);
 #include "SDL_gpu_vulkan_vkfuncs.h"
 
@@ -12630,7 +12629,7 @@ static bool VULKAN_INTERNAL_PrepareVulkan(
     }
 
 #define VULKAN_INSTANCE_FUNCTION(func) \
-    renderer->func = (PFN_##func)vkGetInstanceProcAddr(renderer->instance, #func);
+    *(PFN_vkVoidFunction*)&renderer->func = vkGetInstanceProcAddr(renderer->instance, #func);
 #include "SDL_gpu_vulkan_vkfuncs.h"
 
     if (!VULKAN_INTERNAL_DeterminePhysicalDevice(renderer, features)) {

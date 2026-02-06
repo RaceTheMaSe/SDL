@@ -195,7 +195,7 @@ static void quit(int rc)
 
 static void loadGlobalFunctions(void)
 {
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
     if (!vkGetInstanceProcAddr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                      "SDL_Vulkan_GetVkGetInstanceProcAddr(): %s",
@@ -205,7 +205,7 @@ static void loadGlobalFunctions(void)
 
 #define VULKAN_DEVICE_FUNCTION(name)
 #define VULKAN_GLOBAL_FUNCTION(name)                                                 \
-    name = (PFN_##name)vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);                 \
+    *(PFN_vkVoidFunction*)&name = vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);                 \
     if (!name) {                                                                     \
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,                                   \
                      "vkGetInstanceProcAddr(VK_NULL_HANDLE, \"" #name "\") failed"); \
@@ -248,7 +248,7 @@ static void loadInstanceFunctions(void)
 #define VULKAN_DEVICE_FUNCTION(name)
 #define VULKAN_GLOBAL_FUNCTION(name)
 #define VULKAN_INSTANCE_FUNCTION(name)                                         \
-    name = (PFN_##name)vkGetInstanceProcAddr(vulkanContext->instance, #name);  \
+    *(PFN_vkVoidFunction*)&name = vkGetInstanceProcAddr(vulkanContext->instance, #name);  \
     if (!name) {                                                               \
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,                             \
                      "vkGetInstanceProcAddr(instance, \"" #name "\") failed"); \
@@ -485,12 +485,12 @@ static void createDevice(void)
 
 static void loadDeviceFunctions(void)
 {
-#define VULKAN_DEVICE_FUNCTION(name)                                       \
-    name = (PFN_##name)vkGetDeviceProcAddr(vulkanContext->device, #name);  \
-    if (!name) {                                                           \
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,                         \
-                     "vkGetDeviceProcAddr(device, \"" #name "\") failed"); \
-        quit(2);                                                           \
+#define VULKAN_DEVICE_FUNCTION(name)                                                  \
+    *(PFN_vkVoidFunction*)&name = vkGetDeviceProcAddr(vulkanContext->device, #name);  \
+    if (!name) {                                                                      \
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,                                    \
+                     "vkGetDeviceProcAddr(device, \"" #name "\") failed");            \
+        quit(2);                                                                      \
     }
 #define VULKAN_GLOBAL_FUNCTION(name)
 #define VULKAN_INSTANCE_FUNCTION(name)

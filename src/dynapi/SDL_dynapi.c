@@ -454,14 +454,14 @@ Sint32 SDL_DYNAPI_entry(Uint32 apiver, void *table, Uint32 tablesize)
 static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 {
     HMODULE lib = LoadLibraryA(fname);
-    void *result = NULL;
+    SDL_FunctionPointer result = NULL;
     if (lib) {
-        result = (void *) GetProcAddress(lib, sym);
+        result = (SDL_FunctionPointer)GetProcAddress(lib, sym);
         if (!result) {
             FreeLibrary(lib);
         }
     }
-    return result;
+    return *(void**)&result;
 }
 
 #elif defined(SDL_PLATFORM_UNIX) || defined(SDL_PLATFORM_APPLE) || defined(SDL_PLATFORM_HAIKU)
@@ -525,12 +525,12 @@ static void SDL_InitDynamicAPILocked(void)
     if (libname) {
         while (*libname && !entry) {
             // This is evil, but we're not making any permanent changes...
-            char *ptr = (char *)libname;
+            char *ptr = libname;
             while (true) {
                 char ch = *ptr;
                 if ((ch == ',') || (ch == '\0')) {
                     *ptr = '\0';
-                    entry = (SDL_DYNAPI_ENTRYFN)get_sdlapi_entry(libname, "SDL_DYNAPI_entry");
+                    *(void **)&entry = get_sdlapi_entry(libname, "SDL_DYNAPI_entry");
                     *ptr = ch;
                     libname = (ch == '\0') ? ptr : (ptr + 1);
                     break;

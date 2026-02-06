@@ -1589,7 +1589,9 @@ static bool PSP_CreateRenderer(SDL_Renderer *renderer, SDL_Window *window, SDL_P
 
     // Improve performance when VSYC is enabled and it is not reaching the 60 FPS
     data->vblank_not_reached = true;
-    sceKernelRegisterSubIntrHandler(PSP_VBLANK_INT, 0, psp_on_vblank, data);
+    
+    void (*fp_on_vblank)(u32 sub, PSP_RenderData *data) = &psp_on_vblank;
+    sceKernelRegisterSubIntrHandler(PSP_VBLANK_INT, 0, *(void**)&fp_on_vblank, data);
     sceKernelEnableSubIntr(PSP_VBLANK_INT, 0);
 
     return true;

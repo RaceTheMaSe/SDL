@@ -178,7 +178,7 @@ char *SDL_SYS_GetUserFolder(SDL_Folder folder)
     char *result = NULL;
 
     if (lib) {
-        pSHGetKnownFolderPath = (pfnSHGetKnownFolderPath)GetProcAddress(lib, "SHGetKnownFolderPath");
+        *(FARPROC*)&pSHGetKnownFolderPath = GetProcAddress(lib, "SHGetKnownFolderPath");
     }
 
     if (pSHGetKnownFolderPath) {

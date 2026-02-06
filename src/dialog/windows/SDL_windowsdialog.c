@@ -497,7 +497,7 @@ bool windows_ShowModernFileFolderDialog(SDL_FileDialogType dialog_type, const ch
         goto quit;
     }
 
-    pSHCreateItemFromParsingName = (pfnSHCreateItemFromParsingName)GetProcAddress(shell32_handle, "SHCreateItemFromParsingName");
+    *(FARPROC*)&pSHCreateItemFromParsingName = GetProcAddress(shell32_handle, "SHCreateItemFromParsingName");
     if (!pSHCreateItemFromParsingName) {
         goto quit;
     }
@@ -784,8 +784,8 @@ void windows_ShowFileDialog(void *ptr)
     pfnCommDlgExtendedError pCommDlgExtendedError = NULL;
 
     if (lib) {
-        pGetAnyFileName = (pfnGetAnyFileNameW) GetProcAddress(lib, is_save ? "GetSaveFileNameW" : "GetOpenFileNameW");
-        pCommDlgExtendedError = (pfnCommDlgExtendedError) GetProcAddress(lib, "CommDlgExtendedError");
+        *(FARPROC*)&pGetAnyFileName = GetProcAddress(lib, is_save ? "GetSaveFileNameW" : "GetOpenFileNameW");
+        *(FARPROC*)&pCommDlgExtendedError = GetProcAddress(lib, "CommDlgExtendedError");
     } else {
         SDL_SetError("Couldn't load Comdlg32.dll");
         callback(userdata, NULL, -1);

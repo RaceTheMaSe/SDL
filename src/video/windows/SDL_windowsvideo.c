@@ -303,7 +303,7 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
         /* *INDENT-ON* */ // clang-format on
         pfnCreateDXGI pCreateDXGI;
 
-        pCreateDXGI = (pfnCreateDXGI)SDL_LoadFunction(data->dxgiDLL, "CreateDXGIFactory");
+        *(SDL_FunctionPointer*)&pCreateDXGI = SDL_LoadFunction(data->dxgiDLL, "CreateDXGIFactory");
         if (pCreateDXGI) {
             GUID dxgiGUID = { 0x7b7166ec, 0x21c7, 0x44ae, { 0xb2, 0x1a, 0xc9, 0xae, 0x32, 0x1a, 0xe3, 0x69 } };
             pCreateDXGI(&dxgiGUID, (void **)&data->pDXGIFactory);
@@ -725,7 +725,7 @@ bool D3D_LoadDLL(void **pD3DDLL, IDirect3D9 **pDirect3D9Interface)
         if (SDL_GetHintBoolean(SDL_HINT_WINDOWS_USE_D3D9EX, false)) {
             pfnDirect3DCreate9Ex pDirect3DCreate9Ex;
 
-            pDirect3DCreate9Ex = (pfnDirect3DCreate9Ex)SDL_LoadFunction(*pD3DDLL, "Direct3DCreate9Ex");
+            *(SDL_FunctionPointer*)&pDirect3DCreate9Ex = SDL_LoadFunction(*pD3DDLL, "Direct3DCreate9Ex");
             if (pDirect3DCreate9Ex) {
                 IDirect3D9Ex *pDirect3D9ExInterface;
                 HRESULT hr = pDirect3DCreate9Ex(D3D_SDK_VERSION, &pDirect3D9ExInterface);
@@ -740,7 +740,7 @@ bool D3D_LoadDLL(void **pD3DDLL, IDirect3D9 **pDirect3D9Interface)
             }
         }
 
-        pDirect3DCreate9 = (pfnDirect3DCreate9)SDL_LoadFunction(*pD3DDLL, "Direct3DCreate9");
+        *(SDL_FunctionPointer*)&pDirect3DCreate9 = SDL_LoadFunction(*pD3DDLL, "Direct3DCreate9");
         if (pDirect3DCreate9) {
             *pDirect3D9Interface = pDirect3DCreate9(D3D_SDK_VERSION);
             if (*pDirect3D9Interface) {

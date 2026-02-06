@@ -164,7 +164,7 @@ typedef void (APIENTRY* PFNGLGETINTEGERVPROC) (GLenum pname, GLint * params);
     _this->egl_data->NAME = NAME;
 #else
 #define LOAD_FUNC(TYPE, NAME)                                                               \
-    _this->egl_data->NAME = (TYPE)SDL_LoadFunction(_this->egl_data->egl_dll_handle, #NAME); \
+    *(SDL_FunctionPointer*)&_this->egl_data->NAME = SDL_LoadFunction(_this->egl_data->egl_dll_handle, #NAME); \
     if (!_this->egl_data->NAME) {                                                     \
         return SDL_SetError("Could not retrieve EGL function " #NAME);                \
     }

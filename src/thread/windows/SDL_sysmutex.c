@@ -188,11 +188,11 @@ SDL_Mutex *SDL_CreateMutex(void)
         HMODULE kernel32 = GetModuleHandle(TEXT("kernel32.dll"));
         if (kernel32) {
             // Requires Vista:
-            pInitializeSRWLock = (pfnInitializeSRWLock)GetProcAddress(kernel32, "InitializeSRWLock");
-            pReleaseSRWLockExclusive = (pfnReleaseSRWLockExclusive)GetProcAddress(kernel32, "ReleaseSRWLockExclusive");
-            pAcquireSRWLockExclusive = (pfnAcquireSRWLockExclusive)GetProcAddress(kernel32, "AcquireSRWLockExclusive");
+            *(FARPROC*)&pInitializeSRWLock = GetProcAddress(kernel32, "InitializeSRWLock");
+            *(FARPROC*)&pReleaseSRWLockExclusive = GetProcAddress(kernel32, "ReleaseSRWLockExclusive");
+            *(FARPROC*)&pAcquireSRWLockExclusive = GetProcAddress(kernel32, "AcquireSRWLockExclusive");
             // Requires 7:
-            pTryAcquireSRWLockExclusive = (pfnTryAcquireSRWLockExclusive)GetProcAddress(kernel32, "TryAcquireSRWLockExclusive");
+            *(FARPROC*)&pTryAcquireSRWLockExclusive = GetProcAddress(kernel32, "TryAcquireSRWLockExclusive");
             if (pInitializeSRWLock && pReleaseSRWLockExclusive && pAcquireSRWLockExclusive && pTryAcquireSRWLockExclusive) {
                 impl = &SDL_mutex_impl_srw;
             }

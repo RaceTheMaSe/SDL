@@ -445,7 +445,7 @@ void WIN_GL_InitExtensions(SDL_VideoDevice *_this)
     _this->gl_data->wglMakeCurrent(hdc, hglrc);
 
     /* *INDENT-OFF* */ // clang-format off
-    wglGetExtensionsStringARB = (const char *(WINAPI *)(HDC))
+    *(FARPROC*)&wglGetExtensionsStringARB = /*(const char *(WINAPI *)(HDC))*/
         _this->gl_data->wglGetProcAddress("wglGetExtensionsStringARB");
     /* *INDENT-ON* */ // clang-format on
     if (wglGetExtensionsStringARB) {
@@ -791,8 +791,8 @@ SDL_GLContext WIN_GL_CreateContext(SDL_VideoDevice *_this, SDL_Window *window)
             return NULL;
         }
 
-        wglCreateContextAttribsARB =
-            (PFNWGLCREATECONTEXTATTRIBSARBPROC)_this->gl_data->wglGetProcAddress("wglCreateContextAttribsARB");
+        *(FARPROC*)&wglCreateContextAttribsARB =
+            _this->gl_data->wglGetProcAddress("wglCreateContextAttribsARB");
         if (!wglCreateContextAttribsARB) {
             SDL_SetError("GL 3.x is not supported");
             context = temp_context;

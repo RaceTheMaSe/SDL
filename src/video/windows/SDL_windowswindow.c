@@ -1448,8 +1448,9 @@ static void WIN_GrabKeyboard(SDL_Window *window)
        this nice API that will go through the loaded modules and find the
        one containing our code.
     */
+    SDL_FunctionPointer keyboard_hook = (SDL_FunctionPointer)WIN_KeyboardHookProc;
     if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-                           (LPTSTR)WIN_KeyboardHookProc,
+                           *(LPTSTR*)&keyboard_hook,
                            &module)) {
         return;
     }
@@ -2094,14 +2095,14 @@ static STDMETHODIMP SDLDropTarget_Drop(SDLDropTarget *target,
     return S_OK;
 }
 
-static void *vtDropTarget[] = {
-    (void *)(SDLDropTarget_QueryInterface),
-    (void *)(SDLDropTarget_AddRef),
-    (void *)(SDLDropTarget_Release),
-    (void *)(SDLDropTarget_DragEnter),
-    (void *)(SDLDropTarget_DragOver),
-    (void *)(SDLDropTarget_DragLeave),
-    (void *)(SDLDropTarget_Drop)
+static SDL_FunctionPointer vtDropTarget[] = {
+    (SDL_FunctionPointer)(SDLDropTarget_QueryInterface),
+    (SDL_FunctionPointer)(SDLDropTarget_AddRef),
+    (SDL_FunctionPointer)(SDLDropTarget_Release),
+    (SDL_FunctionPointer)(SDLDropTarget_DragEnter),
+    (SDL_FunctionPointer)(SDLDropTarget_DragOver),
+    (SDL_FunctionPointer)(SDLDropTarget_DragLeave),
+    (SDL_FunctionPointer)(SDLDropTarget_Drop)
 };
 
 void WIN_AcceptDragAndDrop(SDL_Window *window, bool accept)
@@ -2111,7 +2112,7 @@ void WIN_AcceptDragAndDrop(SDL_Window *window, bool accept)
         if (accept && !data->drop_target) {
             SDLDropTarget *drop_target = (SDLDropTarget *)SDL_calloc(1, sizeof(SDLDropTarget));
             if (drop_target != NULL) {
-                drop_target->lpVtbl = vtDropTarget;
+                drop_target->lpVtbl = (void**)vtDropTarget;
                 drop_target->window = window;
                 drop_target->hwnd = data->hwnd;
                 drop_target->format_file = RegisterClipboardFormatW(L"text/uri-list");

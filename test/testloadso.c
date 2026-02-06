@@ -13,6 +13,7 @@
 /* Test program to test dynamic loading with the loadso subsystem.
  */
 
+#include <SDL3/SDL_stdinc.h>
 #include <stdio.h>
 
 #include <SDL3/SDL.h>
@@ -90,13 +91,13 @@ int main(int argc, char *argv[])
                      libname, SDL_GetError());
         result = 3;
     } else {
-        fn = (fntype)SDL_LoadFunction(lib, symname);
+        *(SDL_FunctionPointer*)&fn = SDL_LoadFunction(lib, symname);
         if (!fn) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadFunction('%s') failed: %s",
                          symname, SDL_GetError());
             result = 4;
         } else {
-            SDL_Log("Found %s in %s at %p", symname, libname, fn);
+            SDL_Log("Found %s in %s at %p", symname, libname, *(void**)&fn);
             if (hello) {
                 SDL_Log("Calling function...");
                 fn("     HELLO, WORLD!\n");

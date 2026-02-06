@@ -120,12 +120,12 @@ void SDL_SYS_SetupThread(const char *name)
         if (!kernel32) {
             kernel32 = GetModuleHandle(TEXT("kernel32.dll"));
             if (kernel32) {
-                pSetThreadDescription = (pfnSetThreadDescription)GetProcAddress(kernel32, "SetThreadDescription");
+                *(FARPROC*)&pSetThreadDescription = GetProcAddress(kernel32, "SetThreadDescription");
             }
             if (!kernel32 || !pSetThreadDescription) {
                 HMODULE kernelBase = GetModuleHandle(TEXT("KernelBase.dll"));
                 if (kernelBase) {
-                    pSetThreadDescription = (pfnSetThreadDescription)GetProcAddress(kernelBase, "SetThreadDescription");
+                    *(FARPROC*)&pSetThreadDescription = GetProcAddress(kernelBase, "SetThreadDescription");
                 }
             }
         }

@@ -254,7 +254,7 @@ static bool GL_LoadFunctions(GL_RenderData *data)
     bool result = true;
 #define SDL_PROC(ret, func, params)                                                           \
     do {                                                                                      \
-        data->func = (ret (APIENTRY *) params)SDL_GL_GetProcAddress(#func);                                            \
+        *(SDL_FunctionPointer*)&data->func = SDL_GL_GetProcAddress(#func);                                            \
         if (!data->func) {                                                                    \
             result = SDL_SetError("Couldn't load GL function %s: %s", #func, SDL_GetError()); \
         }                                                                                     \

@@ -65,7 +65,7 @@ static openxrdynlib openxr_loader = { NULL };
 #ifndef SDL_PLATFORM_ANDROID
 static void *OPENXR_GetSym(const char *fnname, bool *failed)
 {
-    void *fn = SDL_LoadFunction(openxr_loader.lib, fnname);
+    SDL_FunctionPointer fn = SDL_LoadFunction(openxr_loader.lib, fnname);
 
 #if DEBUG_DYNAMIC_OPENXR
     if (fn) {
@@ -75,7 +75,7 @@ static void *OPENXR_GetSym(const char *fnname, bool *failed)
     }
 #endif
 
-    return fn;
+    return *(void**)&fn;
 }
 #endif
 
@@ -352,7 +352,9 @@ SDL_DECLSPEC bool SDLCALL SDL_OpenXR_LoadLibrary(void)
         SDL_Log("SDL/OpenXR: Global functions loading %s", failed ? "FAILED" : "succeeded");
 #endif
 #else
-#define SDL_OPENXR_SYM(name) OPENXR_##name = (PFN_##name)OPENXR_GetSym(#name, &failed);
+#define SDL_OPENXR_SYM(name) \
+    void* fp_##name = OPENXR_GetSym(#name, &failed);\
+    OPENXR_##name = *(PFN_##name*)&fp_##name;
 #include "SDL_openxrsym.h"
 #endif
 

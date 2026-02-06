@@ -51,14 +51,14 @@ bool WIN_LoadHIDDLL(void)
     SDL_assert(s_HIDDLLRefCount == 0);
     s_HIDDLLRefCount = 1;
 
-    SDL_HidD_GetAttributes = (HidD_GetAttributes_t)GetProcAddress(s_pHIDDLL, "HidD_GetAttributes");
-    SDL_HidD_GetManufacturerString = (HidD_GetString_t)GetProcAddress(s_pHIDDLL, "HidD_GetManufacturerString");
-    SDL_HidD_GetProductString = (HidD_GetString_t)GetProcAddress(s_pHIDDLL, "HidD_GetProductString");
-    SDL_HidP_GetCaps = (HidP_GetCaps_t)GetProcAddress(s_pHIDDLL, "HidP_GetCaps");
-    SDL_HidP_GetButtonCaps = (HidP_GetButtonCaps_t)GetProcAddress(s_pHIDDLL, "HidP_GetButtonCaps");
-    SDL_HidP_GetValueCaps = (HidP_GetValueCaps_t)GetProcAddress(s_pHIDDLL, "HidP_GetValueCaps");
-    SDL_HidP_MaxDataListLength = (HidP_MaxDataListLength_t)GetProcAddress(s_pHIDDLL, "HidP_MaxDataListLength");
-    SDL_HidP_GetData = (HidP_GetData_t)GetProcAddress(s_pHIDDLL, "HidP_GetData");
+    *(FARPROC*)&SDL_HidD_GetAttributes = GetProcAddress(s_pHIDDLL, "HidD_GetAttributes");
+    *(FARPROC*)&SDL_HidD_GetManufacturerString = GetProcAddress(s_pHIDDLL, "HidD_GetManufacturerString");
+    *(FARPROC*)&SDL_HidD_GetProductString = GetProcAddress(s_pHIDDLL, "HidD_GetProductString");
+    *(FARPROC*)&SDL_HidP_GetCaps = GetProcAddress(s_pHIDDLL, "HidP_GetCaps");
+    *(FARPROC*)&SDL_HidP_GetButtonCaps = GetProcAddress(s_pHIDDLL, "HidP_GetButtonCaps");
+    *(FARPROC*)&SDL_HidP_GetValueCaps = GetProcAddress(s_pHIDDLL, "HidP_GetValueCaps");
+    *(FARPROC*)&SDL_HidP_MaxDataListLength = GetProcAddress(s_pHIDDLL, "HidP_MaxDataListLength");
+    *(FARPROC*)&SDL_HidP_GetData = GetProcAddress(s_pHIDDLL, "HidP_GetData");
     if (!SDL_HidD_GetManufacturerString || !SDL_HidD_GetProductString ||
         !SDL_HidP_GetCaps || !SDL_HidP_GetButtonCaps ||
         !SDL_HidP_GetValueCaps || !SDL_HidP_MaxDataListLength || !SDL_HidP_GetData) {
@@ -194,8 +194,8 @@ void WIN_InitDeviceNotification(void)
 
     cfgmgr32_lib_handle = LoadLibraryA("cfgmgr32.dll");
     if (cfgmgr32_lib_handle) {
-        CM_Register_Notification = (CM_Register_NotificationFunc)GetProcAddress(cfgmgr32_lib_handle, "CM_Register_Notification");
-        CM_Unregister_Notification = (CM_Unregister_NotificationFunc)GetProcAddress(cfgmgr32_lib_handle, "CM_Unregister_Notification");
+        *(FARPROC*)&CM_Register_Notification = GetProcAddress(cfgmgr32_lib_handle, "CM_Register_Notification");
+        *(FARPROC*)&CM_Unregister_Notification = GetProcAddress(cfgmgr32_lib_handle, "CM_Unregister_Notification");
         if (CM_Register_Notification && CM_Unregister_Notification) {
             CM_NOTIFY_FILTER notify_filter;
 

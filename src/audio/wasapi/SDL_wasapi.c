@@ -227,8 +227,8 @@ static bool ManagementThreadPrepare(void)
 
     libavrt = LoadLibrary(TEXT("avrt.dll")); // this library is available in Vista and later. No WinXP, so have to LoadLibrary to use it for now!
     if (libavrt) {
-        pAvSetMmThreadCharacteristicsW = (pfnAvSetMmThreadCharacteristicsW)GetProcAddress(libavrt, "AvSetMmThreadCharacteristicsW");
-        pAvRevertMmThreadCharacteristics = (pfnAvRevertMmThreadCharacteristics)GetProcAddress(libavrt, "AvRevertMmThreadCharacteristics");
+        *(FARPROC*)&pAvSetMmThreadCharacteristicsW = GetProcAddress(libavrt, "AvSetMmThreadCharacteristicsW");
+        *(FARPROC*)&pAvRevertMmThreadCharacteristics = GetProcAddress(libavrt, "AvRevertMmThreadCharacteristics");
     }
 
     ManagementThreadLock = SDL_CreateMutex();

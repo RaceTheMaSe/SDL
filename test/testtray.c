@@ -612,9 +612,12 @@ int main(int argc, char **argv)
     SDL_PropertiesID tray2_props = SDL_CreateProperties();
     SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_ICON_POINTER, icon2);
     SDL_SetStringProperty(tray2_props, SDL_PROP_TRAY_CREATE_TOOLTIP_STRING, "SDL Tray example");
-    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_LEFTCLICK_CALLBACK_POINTER, tray2_leftclick);
-    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_RIGHTCLICK_CALLBACK_POINTER, tray2_rightclick);
-    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_MIDDLECLICK_CALLBACK_POINTER, tray2_middleclick);
+    SDL_FunctionPointer fp_left = (SDL_FunctionPointer)tray2_leftclick;
+    SDL_FunctionPointer fp_right = (SDL_FunctionPointer)tray2_rightclick;
+    SDL_FunctionPointer fp_middle = (SDL_FunctionPointer)tray2_middleclick;
+    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_LEFTCLICK_CALLBACK_POINTER, *(void**)&fp_left);
+    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_RIGHTCLICK_CALLBACK_POINTER, *(void**)&fp_right);
+    SDL_SetPointerProperty(tray2_props, SDL_PROP_TRAY_CREATE_MIDDLECLICK_CALLBACK_POINTER, *(void**)&fp_middle);
     SDL_Tray *tray2 = SDL_CreateTrayWithProperties(tray2_props);
     SDL_DestroyProperties(tray2_props);
 

@@ -90,13 +90,13 @@ static HANDLE SDL_GetWaitableTimer(void)
     if (!initialized) {
         HMODULE module = GetModuleHandle(TEXT("kernel32.dll"));
         if (module) {
-            pCreateWaitableTimerExW = (pfnCreateWaitableTimerExW)GetProcAddress(module, "CreateWaitableTimerExW"); // Windows 7 and up
+            *(FARPROC*)&pCreateWaitableTimerExW = GetProcAddress(module, "CreateWaitableTimerExW"); // Windows 7 and up
             if (!pCreateWaitableTimerExW) {
-                pCreateWaitableTimerW = (pfnCreateWaitableTimerW)GetProcAddress(module, "CreateWaitableTimerW");
+                *(FARPROC*)&pCreateWaitableTimerW = GetProcAddress(module, "CreateWaitableTimerW");
             }
-            pSetWaitableTimerEx = (pfnSetWaitableTimerEx)GetProcAddress(module, "SetWaitableTimerEx"); // Windows Vista and up
+            *(FARPROC*)&pSetWaitableTimerEx = GetProcAddress(module, "SetWaitableTimerEx"); // Windows Vista and up
             if (!pSetWaitableTimerEx) {
-                pSetWaitableTimer = (pfnSetWaitableTimer)GetProcAddress(module, "SetWaitableTimer");
+                *(FARPROC*)&pSetWaitableTimer = GetProcAddress(module, "SetWaitableTimer");
             }
             initialized =
                 (pCreateWaitableTimerExW || pCreateWaitableTimerW) &&
