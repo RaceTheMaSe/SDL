@@ -225,12 +225,116 @@ function(SDL_AddCommonCompilerFlags TARGET)
         set(SDL_PEDANTIC 1)
       endif()
 
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} missing-variable-declarations)
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} declaration-after-statement)
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} bad-function-cast)
+      sdl_target_compile_option_all_languages_disable(${TARGET} padded)
+      sdl_target_compile_option_all_languages_disable(${TARGET} sign-compare)
+      sdl_target_compile_option_all_languages_disable(${TARGET} sign-conversion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} double-promotion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} switch-default)
+      sdl_target_compile_option_all_languages_disable(${TARGET} switch-enum)
+      sdl_target_compile_option_all_languages_disable(${TARGET} format-nonliteral)
+      sdl_target_compile_option_all_languages_disable(${TARGET} float-equal)
+      sdl_target_compile_option_all_languages_disable(${TARGET} cast-align)
+      sdl_target_compile_option_all_languages_disable(${TARGET} cast-qual)
+      sdl_target_compile_option_all_languages_disable(${TARGET} alloca)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unused-macros)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unused-parameter)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unused-variable)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unused-function)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unused-but-set-variable)
+      sdl_target_compile_option_all_languages_disable(${TARGET} missing-field-initializers)
+      sdl_target_compile_option_all_languages_disable(${TARGET} vla)
+      sdl_target_compile_option_all_languages_disable(${TARGET} type-limits)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unguarded-availability-new)
+      sdl_target_compile_option_all_languages_disable(${TARGET} nonportable-system-include-path)
+      sdl_target_compile_option_all_languages_disable(${TARGET} overflow)
+
+      # Clang
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} jump-misses-init)
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} c++-compat)
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} missing-prototypes)
+      sdl_target_compile_option_all_languages_disable_c(${TARGET} strict-prototypes)
+      sdl_target_compile_option_all_languages_disable(${TARGET} assign-enum)
+      sdl_target_compile_option_all_languages_disable(${TARGET} cast-function-type)
+      sdl_target_compile_option_all_languages_disable(${TARGET} cast-function-type-strict)
+      sdl_target_compile_option_all_languages_disable(${TARGET} implicit-int-float-conversion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} implicit-int-conversion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} implicit-int-enum-cast)
+      sdl_target_compile_option_all_languages_disable(${TARGET} implicit-void-ptr-cast)
+      sdl_target_compile_option_all_languages_disable(${TARGET} atomic-implicit-seq-cst)
+      sdl_target_compile_option_all_languages_disable(${TARGET} covered-switch-default)
+      sdl_target_compile_option_all_languages_disable(${TARGET} comma)
+      sdl_target_compile_option_all_languages_disable(${TARGET} disabled-macro-expansion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} variadic-macros)
+      sdl_target_compile_option_all_languages_disable(${TARGET} c99-extensions)
+      sdl_target_compile_option_all_languages_disable(${TARGET} pre-c11-compat)
+      sdl_target_compile_option_all_languages_disable(${TARGET} c23-extensions)
+      sdl_target_compile_option_all_languages_disable(${TARGET} c++-keyword)
+      sdl_target_compile_option_all_languages_disable(${TARGET} reserved-macro-identifier)
+      sdl_target_compile_option_all_languages_disable(${TARGET} reserved-identifier)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unsafe-buffer-usage)
+      sdl_target_compile_option_all_languages_disable(${TARGET} tautological-value-range-compare)
+      sdl_target_compile_option_all_languages_disable(${TARGET} nrvo)
+      sdl_target_compile_option_all_languages_disable(${TARGET} format)
+      sdl_target_compile_option_all_languages_disable(${TARGET} format-non-iso)
+      sdl_target_compile_option_all_languages_disable(${TARGET} format-pedantic)
+      sdl_target_compile_option_all_languages_disable(${TARGET} constant-conversion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} string-conversion)
+      sdl_target_compile_option_all_languages_disable(${TARGET} overlength-strings)
+      sdl_target_compile_option_all_languages_disable(${TARGET} shift-sign-overflow)
+      sdl_target_compile_option_all_languages_disable(${TARGET} long-long)
+      sdl_target_compile_option_all_languages_disable(${TARGET} c++98-compat-pedantic)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unreachable-code-return)
+      sdl_target_compile_option_all_languages_disable(${TARGET} unreachable-code-break)
+      sdl_target_compile_option_all_languages_disable(${TARGET} flexible-array-extensions)
+      sdl_target_compile_option_all_languages_disable(${TARGET} shadow-header)
+      sdl_target_compile_option_all_languages_disable(${TARGET} tentative-definition-compat)
+      sdl_target_compile_option_all_languages_disable(${TARGET} default-const-init-var)
+      sdl_target_compile_option_all_languages_disable(${TARGET} extra-semi)
+      sdl_target_compile_option_all_languages_disable(${TARGET} extra-semi-stmt)
+      sdl_target_compile_option_all_languages_disable(${TARGET} newline-eof)
+      # MinGW Clang
+      sdl_target_compile_option_all_languages_disable(${TARGET} used-but-marked-unused)
+      sdl_target_compile_option_all_languages_disable(${TARGET} four-char-constants)
+      sdl_target_compile_option_all_languages_disable(${TARGET} gnu-zero-variadic-macro-arguments)
     endif()
 
     if(MSVC OR MSVC_CLANG)
       set(SDL_PEDANTIC 1)
 
       sdl_target_compile_option_all_languages(${TARGET} /Wall)
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4018) # token signed/unsigned mismatch
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4061) # enum value not handled in switch
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4100) # unused-parameter
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4125) # octal escape sequence
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4127) # conditional expression is constant
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4132) # const object should be initialized
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4152) # cast-function-type - non-standard extension
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4191) # cast-function-type - unsafe conversion
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4201) # anonymous structs /union
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4242) # implicit-conversion - opposite sign
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4244) # implicit-conversion - same sign
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4245) # implicit-conversion - init
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4255) # no-prototype
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4310) # cast truncates constant value
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4365) # implicit-conversion - argument
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4388) # sign-compare
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4389) # sign/unsigned mismatch
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4464) # relative include paths
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4514) # unreferenced inline function has been removed
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4548) # empty expression
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4668) # undef
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4701) # uninitialized local variable used
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4702) # unreachable code
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4710) # function not inlined
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4711) # function automatically inlined
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4746) # volatile
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4820) # padding
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 4917) # GUID can only be associated with class, interface or namespace (Windows headers)
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 5039) # exception handling - undefined behavior
+      sdl_target_compile_option_all_languages_disable_msvc(${TARGET} 5045) # spectre
     endif()
   endif()
 
