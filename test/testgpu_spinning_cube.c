@@ -1053,7 +1053,7 @@ main(int argc, char *argv[])
     }
 
     mode = SDL_GetCurrentDisplayMode(SDL_GetDisplayForWindow(state->windows[0]));
-    SDL_Log("Screen bpp: %d", SDL_BITSPERPIXEL(mode->format));
+    SDL_Log("Screen bpp: %u", SDL_BITSPERPIXEL(mode->format));
 
     init_render_state(msaa);
 

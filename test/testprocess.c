@@ -474,7 +474,7 @@ static int process_testStdinToStdout(void *arg)
             if (amount_written == 0) {
                 io_status = SDL_GetIOStatus(process_stdin);
                 if (io_status != SDL_IO_STATUS_NOT_READY) {
-                    SDLTest_Log("SDL_GetIOStatus(process_stdin) returns %d, breaking.", io_status);
+                    SDLTest_Log("SDL_GetIOStatus(process_stdin) returns %u, breaking.", io_status);
                     break;
                 }
             }
@@ -493,7 +493,7 @@ static int process_testStdinToStdout(void *arg)
         if (amount_read == 0) {
             io_status = SDL_GetIOStatus(process_stdout);
             if (io_status != SDL_IO_STATUS_NOT_READY) {
-                SDLTest_Log("SDL_GetIOStatus(process_stdout) returned %d, breaking.", io_status);
+                SDLTest_Log("SDL_GetIOStatus(process_stdout) returned %u, breaking.", io_status);
                 break;
             }
         } else {

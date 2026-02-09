@@ -81,7 +81,7 @@ static int SDLCALL joystick_testVirtual(void *arg)
             }
             {
                 SDL_JoystickType type = SDL_GetJoystickType(joystick);
-                SDLTest_AssertCheck(type == desc.type, "SDL_GetJoystickType() -> %d (expected %d)", type, desc.type);
+                SDLTest_AssertCheck(type == desc.type, "SDL_GetJoystickType() -> %u (expected %d)", type, desc.type);
             }
             {
                 Uint16 naxes = SDL_GetNumJoystickAxes(joystick);
@@ -132,7 +132,7 @@ static int SDLCALL joystick_testVirtual(void *arg)
                 }
                 {
                     SDL_GamepadButtonLabel label = SDL_GetGamepadButtonLabel(gamepad, SDL_GAMEPAD_BUTTON_SOUTH);
-                    SDLTest_AssertCheck(label == SDL_GAMEPAD_BUTTON_LABEL_A, "SDL_GetGamepadButtonLabel(SDL_GAMEPAD_BUTTON_SOUTH) -> %d (expected %d [%s])",
+                    SDLTest_AssertCheck(label == SDL_GAMEPAD_BUTTON_LABEL_A, "SDL_GetGamepadButtonLabel(SDL_GAMEPAD_BUTTON_SOUTH) -> %u (expected %d [%s])",
                                         label, SDL_GAMEPAD_BUTTON_LABEL_A, "SDL_GAMEPAD_BUTTON_LABEL_A");
                 }
                 SDLTest_AssertCheck(SDL_GetGamepadButtonLabel(gamepad, SDL_GAMEPAD_BUTTON_SOUTH) == SDL_GAMEPAD_BUTTON_LABEL_A, "SDL_GetGamepadButtonLabel(SDL_GAMEPAD_BUTTON_SOUTH) == SDL_GAMEPAD_BUTTON_LABEL_A");

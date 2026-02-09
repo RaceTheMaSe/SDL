@@ -8884,7 +8884,7 @@ static void WINAPI D3D12_INTERNAL_OnD3D12DebugInfoMsg(
     if (severity <= D3D12_MESSAGE_SEVERITY_ERROR) {
         SDL_LogError(
             SDL_LOG_CATEGORY_GPU,
-            "D3D12 ERROR: %s [%s %s #%d]",
+            "D3D12 ERROR: %s [%s %s #%u]",
             description,
             catStr,
             sevStr,
@@ -8892,7 +8892,7 @@ static void WINAPI D3D12_INTERNAL_OnD3D12DebugInfoMsg(
     } else {
         SDL_LogWarn(
             SDL_LOG_CATEGORY_GPU,
-            "D3D12 WARNING: %s [%s %s #%d]",
+            "D3D12 WARNING: %s [%s %s #%u]",
             description,
             catStr,
             sevStr,

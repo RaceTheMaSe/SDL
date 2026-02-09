@@ -515,7 +515,7 @@ static int SDLCALL audio_getAudioFormatName(void *arg)
     /* audio formats */
     for (i = 0; i < g_numAudioFormats; i++) {
         format = g_audioFormats[i];
-        SDLTest_Log("Audio Format: %s (%d)", g_audioFormatsVerbose[i], format);
+        SDLTest_Log("Audio Format: %s (%u)", g_audioFormatsVerbose[i], format);
 
         /* Get name of format */
         result = SDL_GetAudioFormatName(format);
@@ -536,7 +536,7 @@ static int SDLCALL audio_getAudioFormatName(void *arg)
     for (i = 0; i < g_numInvalidAudioFormats; i++) {
         format = g_invalidAudioFormats[i];
         result = SDL_GetAudioFormatName(format);
-        SDLTest_AssertPass("Call to SDL_GetAudioFormatName(%d)", format);
+        SDLTest_AssertPass("Call to SDL_GetAudioFormatName(%u)", format);
         SDLTest_AssertCheck(result != NULL, "Verify result is not NULL");
         if (result != NULL) {
             SDLTest_AssertCheck(result[0] != '\0',
@@ -607,7 +607,7 @@ static int SDLCALL audio_buildAudioStream(void *arg)
                 spec2.freq = g_audioFrequencies[kk];
                 stream = SDL_CreateAudioStream(&spec1, &spec2);
 
-                SDLTest_AssertPass("Call to SDL_CreateAudioStream(format[%i]=%s(%i),channels[%i]=%i,freq[%i]=%i ==> format[%i]=%s(%i),channels[%i]=%i,freq[%i]=%i)",
+                SDLTest_AssertPass("Call to SDL_CreateAudioStream(format[%i]=%s(%u),channels[%i]=%i,freq[%i]=%i ==> format[%i]=%s(%u),channels[%i]=%i,freq[%i]=%i)",
                                    i, g_audioFormatsVerbose[i], spec1.format, j, spec1.channels, k, spec1.freq, ii, g_audioFormatsVerbose[ii], spec2.format, jj, spec2.channels, kk, spec2.freq);
                 SDLTest_AssertCheck(stream != NULL, "Verify stream value; expected: != NULL, got: %p", (void*)stream);
                 if (stream == NULL) {
@@ -799,7 +799,7 @@ static int SDLCALL audio_convertAudio(void *arg)
                     spec2.freq = g_audioFrequencies[kk];
 
                     stream = SDL_CreateAudioStream(&spec1, &spec2);
-                    SDLTest_AssertPass("Call to SDL_CreateAudioStream(format[%i]=%s(%i),channels[%i]=%i,freq[%i]=%i ==> format[%i]=%s(%i),channels[%i]=%i,freq[%i]=%i)",
+                    SDLTest_AssertPass("Call to SDL_CreateAudioStream(format[%i]=%s(%u),channels[%i]=%i,freq[%i]=%i ==> format[%i]=%s(%u),channels[%i]=%i,freq[%i]=%i)",
                                        i, g_audioFormatsVerbose[i], spec1.format, j, spec1.channels, k, spec1.freq, ii, g_audioFormatsVerbose[ii], spec2.format, jj, spec2.channels, kk, spec2.freq);
                     SDLTest_AssertCheck(stream != NULL, "Verify stream value; expected: != NULL, got: %p", (void*)stream);
                     if (stream == NULL) {

@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 
     mode = SDL_GetCurrentDisplayMode(SDL_GetPrimaryDisplay());
     if (mode) {
-        SDL_Log("Screen BPP    : %d", SDL_BITSPERPIXEL(mode->format));
+        SDL_Log("Screen BPP    : %u", SDL_BITSPERPIXEL(mode->format));
     }
 
     LogSwapInterval();

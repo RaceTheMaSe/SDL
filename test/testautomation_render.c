@@ -1079,7 +1079,7 @@ static void testBlendModeOperation(TestRenderOperation op, int mode, SDL_PixelFo
         SDLTest_AssertCheck(ret == true, "Validate results from calls to SDL_RenderTexture, expected: true, got: %i", ret);
         break;
     default:
-        SDLTest_LogError("Invalid blending operation: %d", op);
+        SDLTest_LogError("Invalid blending operation: %u", op);
         return;
     }
 
@@ -1429,7 +1429,7 @@ static int SDLCALL render_testLogicalSize(void *arg)
         set_w == (w / factor) &&
         set_h == (h / factor) &&
         set_presentation_mode == SDL_LOGICAL_PRESENTATION_LETTERBOX,
-        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %d", set_w, set_h, set_presentation_mode);
+        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %u", set_w, set_h, set_presentation_mode);
     CHECK_FUNC(SDL_GetRenderLogicalPresentationRect, (renderer, &set_rect))
     SDLTest_AssertCheck(
         set_rect.x == 0.0f &&
@@ -1449,7 +1449,7 @@ static int SDLCALL render_testLogicalSize(void *arg)
         set_w == 0 &&
         set_h == 0 &&
         set_presentation_mode == SDL_LOGICAL_PRESENTATION_DISABLED,
-        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %d", set_w, set_h, set_presentation_mode);
+        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %u", set_w, set_h, set_presentation_mode);
     CHECK_FUNC(SDL_GetRenderLogicalPresentationRect, (renderer, &set_rect))
     SDLTest_AssertCheck(
         set_rect.x == 0.0f &&
@@ -1507,7 +1507,7 @@ static int SDLCALL render_testLogicalSize(void *arg)
         set_w == w - 2 * (TESTRENDER_SCREEN_W / 4) &&
         set_h == h &&
         set_presentation_mode == SDL_LOGICAL_PRESENTATION_LETTERBOX,
-        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %d", set_w, set_h, set_presentation_mode);
+        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %u", set_w, set_h, set_presentation_mode);
     CHECK_FUNC(SDL_GetRenderLogicalPresentationRect, (renderer, &set_rect))
     SDLTest_AssertCheck(
         set_rect.x == 20.0f &&
@@ -1523,7 +1523,7 @@ static int SDLCALL render_testLogicalSize(void *arg)
         set_w == 0 &&
         set_h == 0 &&
         set_presentation_mode == SDL_LOGICAL_PRESENTATION_DISABLED,
-        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %d", set_w, set_h, set_presentation_mode);
+        "Validate result from SDL_GetRenderLogicalPresentation, got %d, %d, %u", set_w, set_h, set_presentation_mode);
     CHECK_FUNC(SDL_GetRenderLogicalPresentationRect, (renderer, &set_rect))
     SDLTest_AssertCheck(
         set_rect.x == 0.0f &&

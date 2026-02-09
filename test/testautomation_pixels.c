@@ -736,7 +736,7 @@ static int SDLCALL pixels_getPixelFormatName(void *arg)
 
     /* Blank/undefined format */
     format = SDL_PIXELFORMAT_UNKNOWN;
-    SDLTest_Log("RGB Format: %s (%d)", unknownFormat, format);
+    SDLTest_Log("RGB Format: %s (%u)", unknownFormat, format);
 
     /* Get name of format */
     result = SDL_GetPixelFormatName(format);
@@ -751,7 +751,7 @@ static int SDLCALL pixels_getPixelFormatName(void *arg)
     /* RGB formats */
     for (i = 0; i < g_numAllFormats; i++) {
         format = g_AllFormats[i];
-        SDLTest_Log("RGB Format: %s (%d)", g_AllFormatsVerbose[i], format);
+        SDLTest_Log("RGB Format: %s (%u)", g_AllFormatsVerbose[i], format);
 
         /* Get name of format */
         result = SDL_GetPixelFormatName(format);
@@ -772,7 +772,7 @@ static int SDLCALL pixels_getPixelFormatName(void *arg)
     for (i = 0; i < g_numInvalidPixelFormats; i++) {
         format = g_invalidPixelFormats[i];
         result = SDL_GetPixelFormatName(format);
-        SDLTest_AssertPass("Call to SDL_GetPixelFormatName(%d)", format);
+        SDLTest_AssertPass("Call to SDL_GetPixelFormatName(%u)", format);
         SDLTest_AssertCheck(result != NULL, "Verify result is not NULL");
         if (result != NULL) {
             SDLTest_AssertCheck(result[0] != '\0',
@@ -803,14 +803,14 @@ static int SDLCALL pixels_getPixelFormatDetails(void *arg)
 
     /* Blank/unknown format */
     format = SDL_PIXELFORMAT_UNKNOWN;
-    SDLTest_Log("Pixel Format: %s (%d)", unknownFormat, format);
+    SDLTest_Log("Pixel Format: %s (%u)", unknownFormat, format);
 
     /* Allocate format */
     result = SDL_GetPixelFormatDetails(format);
     SDLTest_AssertPass("Call to SDL_GetPixelFormatDetails()");
     SDLTest_AssertCheck(result != NULL, "Verify result is not NULL");
     if (result != NULL) {
-        SDLTest_AssertCheck(result->format == format, "Verify value of result.format; expected: %d, got %d", format, result->format);
+        SDLTest_AssertCheck(result->format == format, "Verify value of result.format; expected: %u, got %u", format, result->format);
         SDLTest_AssertCheck(result->bits_per_pixel == 0,
                             "Verify value of result.bits_per_pixel; expected: 0, got %u",
                             result->bits_per_pixel);
@@ -824,14 +824,14 @@ static int SDLCALL pixels_getPixelFormatDetails(void *arg)
     /* RGB formats */
     for (i = 0; i < g_numAllFormats; i++) {
         format = g_AllFormats[i];
-        SDLTest_Log("Pixel Format: %s (%d)", g_AllFormatsVerbose[i], format);
+        SDLTest_Log("Pixel Format: %s (%u)", g_AllFormatsVerbose[i], format);
 
         /* Allocate format */
         result = SDL_GetPixelFormatDetails(format);
         SDLTest_AssertPass("Call to SDL_GetPixelFormatDetails()");
         SDLTest_AssertCheck(result != NULL, "Verify result is not NULL");
         if (result != NULL) {
-            SDLTest_AssertCheck(result->format == format, "Verify value of result.format; expected: %d, got %d", format, result->format);
+            SDLTest_AssertCheck(result->format == format, "Verify value of result.format; expected: %u, got %u", format, result->format);
             if (!SDL_ISPIXELFORMAT_FOURCC(format)) {
                 SDLTest_AssertCheck(result->bits_per_pixel > 0,
                                     "Verify value of result.bits_per_pixel; expected: >0, got %u",
@@ -860,7 +860,7 @@ static int SDLCALL pixels_getPixelFormatDetails(void *arg)
         SDLTest_AssertPass("Call to SDL_ClearError()");
         format = g_invalidPixelFormats[i];
         result = SDL_GetPixelFormatDetails(format);
-        SDLTest_AssertPass("Call to SDL_GetPixelFormatDetails(%d)", format);
+        SDLTest_AssertPass("Call to SDL_GetPixelFormatDetails(%u)", format);
         SDLTest_AssertCheck(result == NULL, "Verify result is NULL");
         error = SDL_GetError();
         SDLTest_AssertPass("Call to SDL_GetError()");
@@ -982,7 +982,7 @@ static int SDLCALL pixels_saveLoadBMP(void *arg)
             continue;
         }
 
-        SDLTest_Log("Pixel Format: %s (%d)", g_AllFormatsVerbose[i], format);
+        SDLTest_Log("Pixel Format: %s (%u)", g_AllFormatsVerbose[i], format);
 
         /* Create surface */
         surface = SDL_CreateSurface(1, 1, format);
@@ -1030,7 +1030,7 @@ static int SDLCALL pixels_saveLoadBMP(void *arg)
     for (i = 0; i < SDL_arraysize(g_AllLargeFormats); i++) {
         SDL_PixelFormat format = g_AllLargeFormats[i];
 
-        SDLTest_Log("Pixel Format: %s (%d)", SDL_GetPixelFormatName(format), format);
+        SDLTest_Log("Pixel Format: %s (%u)", SDL_GetPixelFormatName(format), format);
 
         /* Create surface */
         surface = SDL_CreateSurface(1, 1, format);
@@ -1100,7 +1100,7 @@ static int SDLCALL pixels_saveLoadPNG(void *arg)
             continue;
         }
 
-        SDLTest_Log("Pixel Format: %s (%d)", g_AllFormatsVerbose[i], format);
+        SDLTest_Log("Pixel Format: %s (%u)", g_AllFormatsVerbose[i], format);
 
         /* Create surface */
         surface = SDL_CreateSurface(1, 1, format);
@@ -1140,7 +1140,7 @@ static int SDLCALL pixels_saveLoadPNG(void *arg)
     for (i = 0; i < SDL_arraysize(g_AllLargeFormats); i++) {
         SDL_PixelFormat format = g_AllLargeFormats[i];
 
-        SDLTest_Log("Pixel Format: %s (%d)", SDL_GetPixelFormatName(format), format);
+        SDLTest_Log("Pixel Format: %s (%u)", SDL_GetPixelFormatName(format), format);
 
         /* Create surface */
         surface = SDL_CreateSurface(1, 1, format);

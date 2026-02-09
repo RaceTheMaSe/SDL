@@ -97,7 +97,7 @@ static int SDLCALL properties_testBasic(void *arg)
     SDL_SetPointerProperty(props, "foo", (void *)0x01);
     type = SDL_GetPropertyType(props, "foo");
     SDLTest_AssertCheck(type == SDL_PROPERTY_TYPE_POINTER,
-            "Verify property type, expected %d, got: %d", SDL_PROPERTY_TYPE_POINTER, type);
+            "Verify property type, expected %d, got: %u", SDL_PROPERTY_TYPE_POINTER, type);
     value = SDL_GetPointerProperty(props, "foo", NULL);
     SDLTest_AssertCheck(value == (void *)0x01,
             "Verify property, expected 0x01, got: %p", value);
@@ -119,7 +119,7 @@ static int SDLCALL properties_testBasic(void *arg)
     SDL_SetStringProperty(props, "foo", "bar");
     type = SDL_GetPropertyType(props, "foo");
     SDLTest_AssertCheck(type == SDL_PROPERTY_TYPE_STRING,
-            "Verify property type, expected %d, got: %d", SDL_PROPERTY_TYPE_STRING, type);
+            "Verify property type, expected %d, got: %u", SDL_PROPERTY_TYPE_STRING, type);
     value = SDL_GetPointerProperty(props, "foo", NULL);
     SDLTest_AssertCheck(value == NULL,
             "Verify property, expected NULL, got: %p", value);
@@ -141,7 +141,7 @@ static int SDLCALL properties_testBasic(void *arg)
     SDL_SetNumberProperty(props, "foo", 1);
     type = SDL_GetPropertyType(props, "foo");
     SDLTest_AssertCheck(type == SDL_PROPERTY_TYPE_NUMBER,
-            "Verify property type, expected %d, got: %d", SDL_PROPERTY_TYPE_NUMBER, type);
+            "Verify property type, expected %d, got: %u", SDL_PROPERTY_TYPE_NUMBER, type);
     value = SDL_GetPointerProperty(props, "foo", NULL);
     SDLTest_AssertCheck(value == NULL,
             "Verify property, expected NULL, got: %p", value);
@@ -163,7 +163,7 @@ static int SDLCALL properties_testBasic(void *arg)
     SDL_SetFloatProperty(props, "foo", 1.75f);
     type = SDL_GetPropertyType(props, "foo");
     SDLTest_AssertCheck(type == SDL_PROPERTY_TYPE_FLOAT,
-            "Verify property type, expected %d, got: %d", SDL_PROPERTY_TYPE_FLOAT, type);
+            "Verify property type, expected %d, got: %u", SDL_PROPERTY_TYPE_FLOAT, type);
     value = SDL_GetPointerProperty(props, "foo", NULL);
     SDLTest_AssertCheck(value == NULL,
             "Verify property, expected NULL, got: %p", value);
@@ -185,7 +185,7 @@ static int SDLCALL properties_testBasic(void *arg)
     SDL_SetBooleanProperty(props, "foo", 3); /* Note we're testing non-true/false value here */
     type = SDL_GetPropertyType(props, "foo");
     SDLTest_AssertCheck(type == SDL_PROPERTY_TYPE_BOOLEAN,
-            "Verify property type, expected %d, got: %d", SDL_PROPERTY_TYPE_BOOLEAN, type);
+            "Verify property type, expected %d, got: %u", SDL_PROPERTY_TYPE_BOOLEAN, type);
     value = SDL_GetPointerProperty(props, "foo", NULL);
     SDLTest_AssertCheck(value == NULL,
             "Verify property, expected NULL, got: %p", value);

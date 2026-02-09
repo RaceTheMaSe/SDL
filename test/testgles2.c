@@ -775,7 +775,7 @@ int main(int argc, char *argv[])
     mode = SDL_GetCurrentDisplayMode(SDL_GetPrimaryDisplay());
     SDL_Log("Threaded  : %s", threaded ? "yes" : "no");
     if (mode) {
-        SDL_Log("Screen bpp: %d", SDL_BITSPERPIXEL(mode->format));
+        SDL_Log("Screen bpp: %u", SDL_BITSPERPIXEL(mode->format));
         SDL_Log("%s", "");
     }
     SDL_Log("Vendor     : %s", ctx.glGetString(GL_VENDOR));

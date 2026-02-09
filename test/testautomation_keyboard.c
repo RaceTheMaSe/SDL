@@ -225,7 +225,7 @@ static int SDLCALL keyboard_getScancodeNameNegative(void *arg)
     /* Out-of-bounds scancode */
     scancode = (SDL_Scancode)SDL_SCANCODE_COUNT;
     result = SDL_GetScancodeName(scancode);
-    SDLTest_AssertPass("Call to SDL_GetScancodeName(%d/large)", scancode);
+    SDLTest_AssertPass("Call to SDL_GetScancodeName(%u/large)", scancode);
     SDLTest_AssertCheck(result != NULL, "Verify result from call is not NULL");
     SDLTest_AssertCheck(SDL_strcmp(result, expected) == 0, "Verify result from call is valid, expected: '%s', got: '%s'", expected, result);
     checkInvalidScancodeError();
@@ -506,42 +506,42 @@ static int SDLCALL keyboard_getScancodeFromName(void *arg)
     /* Regular key, 1 character, first name in list */
     scancode = SDL_GetScancodeFromName("A");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('A')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_A, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_A, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_A, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_A, scancode);
 
     /* Regular key, 1 character */
     scancode = SDL_GetScancodeFromName("4");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('4')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_4, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_4, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_4, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_4, scancode);
 
     /* Regular key, 2 characters */
     scancode = SDL_GetScancodeFromName("F1");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('F1')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_F1, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_F1, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_F1, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_F1, scancode);
 
     /* Regular key, 3 characters */
     scancode = SDL_GetScancodeFromName("End");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('End')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_END, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_END, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_END, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_END, scancode);
 
     /* Regular key, 4 characters */
     scancode = SDL_GetScancodeFromName("Find");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('Find')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_FIND, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_FIND, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_FIND, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_FIND, scancode);
 
     /* Regular key, several characters */
     scancode = SDL_GetScancodeFromName("Backspace");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('Backspace')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_BACKSPACE, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_BACKSPACE, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_BACKSPACE, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_BACKSPACE, scancode);
 
     /* Regular key, several characters with space */
     scancode = SDL_GetScancodeFromName("Keypad Enter");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('Keypad Enter')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_KP_ENTER, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_KP_ENTER, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_KP_ENTER, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_KP_ENTER, scancode);
 
     /* Regular key, last name in list */
     scancode = SDL_GetScancodeFromName("Sleep");
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('Sleep')");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_SLEEP, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_SLEEP, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_SLEEP, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_SLEEP, scancode);
 
     return TEST_COMPLETED;
 }
@@ -588,21 +588,21 @@ static int SDLCALL keyboard_getScancodeFromNameNegative(void *arg)
     scancode = SDL_GetScancodeFromName(name);
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName('%s')", name);
     SDL_free(name);
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_UNKNOWN, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_UNKNOWN, scancode);
     checkInvalidNameError();
 
     /* Zero length string input */
     name = "";
     scancode = SDL_GetScancodeFromName(name);
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName(NULL)");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_UNKNOWN, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_UNKNOWN, scancode);
     checkInvalidNameError();
 
     /* NULL input */
     name = NULL;
     scancode = SDL_GetScancodeFromName(name);
     SDLTest_AssertPass("Call to SDL_GetScancodeFromName(NULL)");
-    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %d", SDL_SCANCODE_UNKNOWN, scancode);
+    SDLTest_AssertCheck(scancode == SDL_SCANCODE_UNKNOWN, "Validate return value from SDL_GetScancodeFromName, expected: %d, got: %u", SDL_SCANCODE_UNKNOWN, scancode);
     checkInvalidNameError();
 
     return TEST_COMPLETED;

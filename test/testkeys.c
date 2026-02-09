@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     for (scancode = 0; scancode < SDL_SCANCODE_COUNT; ++scancode) {
-        SDL_Log("Scancode #%d, \"%s\"", scancode,
+        SDL_Log("Scancode #%u, \"%s\"", scancode,
                 SDL_GetScancodeName(scancode));
     }
     SDL_Quit();
