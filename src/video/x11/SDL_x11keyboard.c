@@ -721,19 +721,23 @@ void X11_CreateInputContext(SDL_WindowData *data)
         if (hint && SDL_strstr(hint, "composition")) {
             XIMCallback draw_callback;
             draw_callback.client_data = (XPointer)data;
-            draw_callback.callback = *(XIMProc*)&preedit_draw_callback;
+            typedef void (*draw_callback_fn)(XIC, XPointer, XIMPreeditDrawCallbackStruct *);
+            *(draw_callback_fn*)&draw_callback.callback = preedit_draw_callback;
 
             XIMCallback start_callback;
             start_callback.client_data = (XPointer)data;
-            start_callback.callback = *(XIMProc*)&preedit_start_callback;
+            typedef int (*start_callback_fn)(XIC, XPointer, XPointer);
+            *(start_callback_fn*)&start_callback.callback = preedit_start_callback;
 
             XIMCallback done_callback;
             done_callback.client_data = (XPointer)data;
-            done_callback.callback = *(XIMProc*)&preedit_done_callback;
+            typedef void (*done_callback_fn)(XIC, XPointer, XPointer);
+            *(done_callback_fn*)&done_callback.callback = preedit_done_callback;
 
             XIMCallback caret_callback;
             caret_callback.client_data = (XPointer)data;
-            caret_callback.callback = *(XIMProc*)&preedit_caret_callback;
+            typedef void (*preedit_caret_callback_fn)(XIC, XPointer, XIMPreeditCaretCallbackStruct*);
+            *(preedit_caret_callback_fn*)&caret_callback.callback = preedit_caret_callback;
 
             XVaNestedList attr = X11_XVaCreateNestedList(0,
                                                          XNPreeditStartCallback, &start_callback,

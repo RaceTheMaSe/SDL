@@ -586,7 +586,9 @@ SDL_TrayEntry *SDL_InsertTrayEntryAt(SDL_TrayMenu *menu, int pos, const char *la
     gtk->gtk.widget_show(entry->item);
     gtk->gtk.menu_shell_insert(menu->menu, entry->item, (pos == menu->nEntries) ? -1 : pos);
 
-    SDL_FunctionPointer fn = *(SDL_FunctionPointer*)&call_callback;
+    typedef void (*call_callback_fn)(GtkMenuItem *item, gpointer ptr);
+    SDL_FunctionPointer fn;
+    *(call_callback_fn*)&fn = call_callback;
     gtk->g.signal_connect(entry->item, "activate", *(void**)&fn, entry);
 
     SDL_Gtk_ExitContext(gtk);
