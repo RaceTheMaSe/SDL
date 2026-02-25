@@ -42,7 +42,8 @@ typedef uintptr_t (__cdecl * SDL_BeginThreadExCallback)
 static DWORD RunThread(void *data)
 {
     SDL_Thread *thread = (SDL_Thread *)data;
-    SDL_EndThreadExCallback pfnEndThread = (SDL_EndThreadExCallback)thread->endfunc;
+    SDL_EndThreadExCallback pfnEndThread;
+    *(SDL_FunctionPointer*)&pfnEndThread = thread->endfunc;
     SDL_RunThread(thread);
     if (pfnEndThread) {
         pfnEndThread(0);
@@ -64,7 +65,8 @@ bool SDL_SYS_CreateThread(SDL_Thread *thread,
                           SDL_FunctionPointer vpfnBeginThread,
                           SDL_FunctionPointer vpfnEndThread)
 {
-    SDL_BeginThreadExCallback pfnBeginThread = (SDL_BeginThreadExCallback) vpfnBeginThread;
+    SDL_BeginThreadExCallback pfnBeginThread;
+    *(SDL_FunctionPointer*)&pfnBeginThread = vpfnBeginThread;
 
     const DWORD flags = thread->stacksize ? STACK_SIZE_PARAM_IS_A_RESERVATION : 0;
 

@@ -60,12 +60,12 @@ bool WIN_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
     }
     SDL_strlcpy(_this->vulkan_config.loader_path, path,
                 SDL_arraysize(_this->vulkan_config.loader_path));
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_LoadFunction(
         _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
     if (!vkGetInstanceProcAddr) {
         goto fail;
     }
-    _this->vulkan_config.vkGetInstanceProcAddr = (SDL_FunctionPointer)vkGetInstanceProcAddr;
+    *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
     _this->vulkan_config.vkEnumerateInstanceExtensionProperties =
         (SDL_FunctionPointer)vkGetInstanceProcAddr(
             VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
@@ -73,7 +73,7 @@ bool WIN_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         goto fail;
     }
     extensions = SDL_Vulkan_CreateInstanceExtensionsList(
-        (PFN_vkEnumerateInstanceExtensionProperties)
+        *(PFN_vkEnumerateInstanceExtensionProperties*)&
             _this->vulkan_config.vkEnumerateInstanceExtensionProperties,
         &extensionCount);
     if (!extensions) {
@@ -129,9 +129,10 @@ bool WIN_Vulkan_CreateSurface(SDL_VideoDevice *_this,
 {
     SDL_WindowData *windowData = window->internal;
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr =
-        (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
-    PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR =
-        (PFN_vkCreateWin32SurfaceKHR)vkGetInstanceProcAddr(
+        *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr;
+    PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+    *(PFN_vkVoidFunction*)&vkCreateWin32SurfaceKHR =
+        vkGetInstanceProcAddr(
             instance,
             "vkCreateWin32SurfaceKHR");
     VkWin32SurfaceCreateInfoKHR createInfo;
@@ -173,9 +174,10 @@ bool WIN_Vulkan_GetPresentationSupport(SDL_VideoDevice *_this,
                                            Uint32 queueFamilyIndex)
 {
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr =
-        (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
-    PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR =
-        (PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)vkGetInstanceProcAddr(
+        *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr;
+    PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR;
+    *(PFN_vkVoidFunction*)&vkGetPhysicalDeviceWin32PresentationSupportKHR =
+        vkGetInstanceProcAddr(
             instance,
             "vkGetPhysicalDeviceWin32PresentationSupportKHR");
 

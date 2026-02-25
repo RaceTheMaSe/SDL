@@ -1448,7 +1448,8 @@ static void WIN_GrabKeyboard(SDL_Window *window)
        this nice API that will go through the loaded modules and find the
        one containing our code.
     */
-    SDL_FunctionPointer keyboard_hook = (SDL_FunctionPointer)WIN_KeyboardHookProc;
+    typedef LRESULT (*WIN_KeyboardHookProc_Func)(int nCode, WPARAM wParam, LPARAM lParam);
+    WIN_KeyboardHookProc_Func keyboard_hook = WIN_KeyboardHookProc;
     if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
                            *(LPTSTR*)&keyboard_hook,
                            &module)) {
@@ -2098,7 +2099,7 @@ static STDMETHODIMP SDLDropTarget_Drop(SDLDropTarget *target,
 static SDL_FunctionPointer vtDropTarget[] = {
     (SDL_FunctionPointer)(SDLDropTarget_QueryInterface),
     (SDL_FunctionPointer)(SDLDropTarget_AddRef),
-    (SDL_FunctionPointer)(SDLDropTarget_Release),
+    (SDL_FunctionPointer)(*SDLDropTarget_Release),
     (SDL_FunctionPointer)(SDLDropTarget_DragEnter),
     (SDL_FunctionPointer)(SDLDropTarget_DragOver),
     (SDL_FunctionPointer)(SDLDropTarget_DragLeave),

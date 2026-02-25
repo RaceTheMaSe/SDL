@@ -262,7 +262,8 @@ WIN_RoInitialize(void)
 void WIN_RoUninitialize(void)
 {
     typedef void(WINAPI * RoUninitialize_t)(void);
-    RoUninitialize_t RoUninitializeFunc = (RoUninitialize_t)WIN_LoadComBaseFunction("RoUninitialize");
+    RoUninitialize_t RoUninitializeFunc;
+    *(FARPROC*)&RoUninitializeFunc = WIN_LoadComBaseFunction("RoUninitialize");
     if (RoUninitializeFunc) {
         RoUninitializeFunc();
     }

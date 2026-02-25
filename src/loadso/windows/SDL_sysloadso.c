@@ -49,7 +49,8 @@ SDL_SharedObject *SDL_LoadObject(const char *sofile)
 
 SDL_FunctionPointer SDL_LoadFunction(SDL_SharedObject *handle, const char *name)
 {
-    SDL_FunctionPointer symbol = (SDL_FunctionPointer)GetProcAddress((HMODULE)handle, name);
+    SDL_FunctionPointer symbol;
+    *(FARPROC*)&symbol = GetProcAddress((HMODULE)handle, name);
     if (!symbol) {
         char errbuf[512];
         SDL_snprintf(errbuf, sizeof (errbuf), "Failed loading %s", name);

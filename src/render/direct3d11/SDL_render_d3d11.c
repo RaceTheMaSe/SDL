@@ -537,9 +537,9 @@ static HRESULT D3D11_CreateDeviceResources(SDL_Renderer *renderer)
         goto done;
     }
 
-    pCreateDXGIFactory2 = (pfnCreateDXGIFactory2)SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory2");
+    *(SDL_FunctionPointer*)&pCreateDXGIFactory2 = SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory2");
     if (!pCreateDXGIFactory2) {
-        pCreateDXGIFactory = (pfnCreateDXGIFactory)SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory");
+        *(SDL_FunctionPointer*)&pCreateDXGIFactory = SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory");
         if (!pCreateDXGIFactory) {
             result = E_FAIL;
             goto done;
@@ -552,7 +552,7 @@ static HRESULT D3D11_CreateDeviceResources(SDL_Renderer *renderer)
         goto done;
     }
 
-    pD3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)SDL_LoadFunction(data->hD3D11Mod, "D3D11CreateDevice");
+    *(SDL_FunctionPointer*)&pD3D11CreateDevice = SDL_LoadFunction(data->hD3D11Mod, "D3D11CreateDevice");
     if (!pD3D11CreateDevice) {
         result = E_FAIL;
         goto done;
@@ -564,7 +564,7 @@ static HRESULT D3D11_CreateDeviceResources(SDL_Renderer *renderer)
         pfnCreateDXGIFactory2 pDXGIGetDebugInterface1;
 
         // If the debug hint is set, also create the DXGI factory in debug mode
-        pDXGIGetDebugInterface1 = (pfnCreateDXGIFactory2)SDL_LoadFunction(data->hDXGIMod, "DXGIGetDebugInterface1");
+        *(SDL_FunctionPointer*)&pDXGIGetDebugInterface1 = SDL_LoadFunction(data->hDXGIMod, "DXGIGetDebugInterface1");
         if (!pDXGIGetDebugInterface1) {
             result = E_FAIL;
             goto done;

@@ -95,7 +95,7 @@ static void UnloadWinIoRingLibrary(void)
 static bool LoadWinIoRingSyms(void)
 {
     #define SDL_IORING_FUNC(ret, fn, args) { \
-        ioring.fn = (SDL_fntype_##fn) SDL_LoadFunction(ioring_handle, #fn); \
+        *(SDL_FunctionPointer*)&ioring.fn = SDL_LoadFunction(ioring_handle, #fn); \
         if (!ioring.fn) { \
             return false; \
         } \

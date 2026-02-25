@@ -249,25 +249,25 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
     data->userDLL = SDL_LoadObject("USER32.DLL");
     if (data->userDLL) {
         /* *INDENT-OFF* */ // clang-format off
-        data->CloseTouchInputHandle = (BOOL (WINAPI *)(HTOUCHINPUT))SDL_LoadFunction(data->userDLL, "CloseTouchInputHandle");
-        data->GetTouchInputInfo = (BOOL (WINAPI *)(HTOUCHINPUT, UINT, PTOUCHINPUT, int)) SDL_LoadFunction(data->userDLL, "GetTouchInputInfo");
-        data->RegisterTouchWindow = (BOOL (WINAPI *)(HWND, ULONG))SDL_LoadFunction(data->userDLL, "RegisterTouchWindow");
-        data->SetProcessDPIAware = (BOOL (WINAPI *)(void))SDL_LoadFunction(data->userDLL, "SetProcessDPIAware");
-        data->SetProcessDpiAwarenessContext = (BOOL (WINAPI *)(DPI_AWARENESS_CONTEXT))SDL_LoadFunction(data->userDLL, "SetProcessDpiAwarenessContext");
-        data->SetThreadDpiAwarenessContext = (DPI_AWARENESS_CONTEXT (WINAPI *)(DPI_AWARENESS_CONTEXT))SDL_LoadFunction(data->userDLL, "SetThreadDpiAwarenessContext");
-        data->GetThreadDpiAwarenessContext = (DPI_AWARENESS_CONTEXT (WINAPI *)(void))SDL_LoadFunction(data->userDLL, "GetThreadDpiAwarenessContext");
-        data->GetAwarenessFromDpiAwarenessContext = (DPI_AWARENESS (WINAPI *)(DPI_AWARENESS_CONTEXT))SDL_LoadFunction(data->userDLL, "GetAwarenessFromDpiAwarenessContext");
-        data->EnableNonClientDpiScaling = (BOOL (WINAPI *)(HWND))SDL_LoadFunction(data->userDLL, "EnableNonClientDpiScaling");
-        data->AdjustWindowRectExForDpi = (BOOL (WINAPI *)(LPRECT, DWORD, BOOL, DWORD, UINT))SDL_LoadFunction(data->userDLL, "AdjustWindowRectExForDpi");
-        data->GetDpiForWindow = (UINT (WINAPI *)(HWND))SDL_LoadFunction(data->userDLL, "GetDpiForWindow");
-        data->AreDpiAwarenessContextsEqual = (BOOL (WINAPI *)(DPI_AWARENESS_CONTEXT, DPI_AWARENESS_CONTEXT))SDL_LoadFunction(data->userDLL, "AreDpiAwarenessContextsEqual");
-        data->IsValidDpiAwarenessContext = (BOOL (WINAPI *)(DPI_AWARENESS_CONTEXT))SDL_LoadFunction(data->userDLL, "IsValidDpiAwarenessContext");
-        data->GetDisplayConfigBufferSizes = (LONG (WINAPI *)(UINT32,UINT32 *,UINT32 *))SDL_LoadFunction(data->userDLL, "GetDisplayConfigBufferSizes");
-        data->QueryDisplayConfig = (LONG (WINAPI *)(UINT32,UINT32 *,DISPLAYCONFIG_PATH_INFO*,UINT32 *,DISPLAYCONFIG_MODE_INFO*,DISPLAYCONFIG_TOPOLOGY_ID*))SDL_LoadFunction(data->userDLL, "QueryDisplayConfig");
-        data->DisplayConfigGetDeviceInfo = (LONG (WINAPI *)(DISPLAYCONFIG_DEVICE_INFO_HEADER*))SDL_LoadFunction(data->userDLL, "DisplayConfigGetDeviceInfo");
-        data->GetPointerType = (BOOL (WINAPI *)(UINT32, POINTER_INPUT_TYPE *))SDL_LoadFunction(data->userDLL, "GetPointerType");
-        data->GetPointerPenInfo = (BOOL (WINAPI *)(UINT32, POINTER_PEN_INFO *))SDL_LoadFunction(data->userDLL, "GetPointerPenInfo");
-        data->GetPointerDeviceRects = (BOOL (WINAPI *)(HANDLE, RECT *, RECT *))SDL_LoadFunction(data->userDLL, "GetPointerDeviceRects");
+        *(SDL_FunctionPointer*)&data->CloseTouchInputHandle = SDL_LoadFunction(data->userDLL, "CloseTouchInputHandle");
+        *(SDL_FunctionPointer*)&data->GetTouchInputInfo = SDL_LoadFunction(data->userDLL, "GetTouchInputInfo");
+        *(SDL_FunctionPointer*)&data->RegisterTouchWindow = SDL_LoadFunction(data->userDLL, "RegisterTouchWindow");
+        *(SDL_FunctionPointer*)&data->SetProcessDPIAware = SDL_LoadFunction(data->userDLL, "SetProcessDPIAware");
+        *(SDL_FunctionPointer*)&data->SetProcessDpiAwarenessContext = SDL_LoadFunction(data->userDLL, "SetProcessDpiAwarenessContext");
+        *(SDL_FunctionPointer*)&data->SetThreadDpiAwarenessContext = SDL_LoadFunction(data->userDLL, "SetThreadDpiAwarenessContext");
+        *(SDL_FunctionPointer*)&data->GetThreadDpiAwarenessContext = SDL_LoadFunction(data->userDLL, "GetThreadDpiAwarenessContext");
+        *(SDL_FunctionPointer*)&data->GetAwarenessFromDpiAwarenessContext = SDL_LoadFunction(data->userDLL, "GetAwarenessFromDpiAwarenessContext");
+        *(SDL_FunctionPointer*)&data->EnableNonClientDpiScaling = SDL_LoadFunction(data->userDLL, "EnableNonClientDpiScaling");
+        *(SDL_FunctionPointer*)&data->AdjustWindowRectExForDpi = SDL_LoadFunction(data->userDLL, "AdjustWindowRectExForDpi");
+        *(SDL_FunctionPointer*)&data->GetDpiForWindow = SDL_LoadFunction(data->userDLL, "GetDpiForWindow");
+        *(SDL_FunctionPointer*)&data->AreDpiAwarenessContextsEqual = SDL_LoadFunction(data->userDLL, "AreDpiAwarenessContextsEqual");
+        *(SDL_FunctionPointer*)&data->IsValidDpiAwarenessContext = SDL_LoadFunction(data->userDLL, "IsValidDpiAwarenessContext");
+        *(SDL_FunctionPointer*)&data->GetDisplayConfigBufferSizes = SDL_LoadFunction(data->userDLL, "GetDisplayConfigBufferSizes");
+        *(SDL_FunctionPointer*)&data->QueryDisplayConfig = SDL_LoadFunction(data->userDLL, "QueryDisplayConfig");
+        *(SDL_FunctionPointer*)&data->DisplayConfigGetDeviceInfo = SDL_LoadFunction(data->userDLL, "DisplayConfigGetDeviceInfo");
+        *(SDL_FunctionPointer*)&data->GetPointerType = SDL_LoadFunction(data->userDLL, "GetPointerType");
+        *(SDL_FunctionPointer*)&data->GetPointerPenInfo = SDL_LoadFunction(data->userDLL, "GetPointerPenInfo");
+        *(SDL_FunctionPointer*)&data->GetPointerDeviceRects = SDL_LoadFunction(data->userDLL, "GetPointerDeviceRects");
         /* *INDENT-ON* */ // clang-format on
     } else {
         SDL_ClearError();
@@ -276,8 +276,8 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
     data->shcoreDLL = SDL_LoadObject("SHCORE.DLL");
     if (data->shcoreDLL) {
         /* *INDENT-OFF* */ // clang-format off
-        data->GetDpiForMonitor = (HRESULT (WINAPI *)(HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT *))SDL_LoadFunction(data->shcoreDLL, "GetDpiForMonitor");
-        data->SetProcessDpiAwareness = (HRESULT (WINAPI *)(PROCESS_DPI_AWARENESS))SDL_LoadFunction(data->shcoreDLL, "SetProcessDpiAwareness");
+        *(SDL_FunctionPointer*)&data->GetDpiForMonitor = SDL_LoadFunction(data->shcoreDLL, "GetDpiForMonitor");
+        *(SDL_FunctionPointer*)&data->SetProcessDpiAwareness = SDL_LoadFunction(data->shcoreDLL, "SetProcessDpiAwareness");
         /* *INDENT-ON* */ // clang-format on
     } else {
         SDL_ClearError();
@@ -286,9 +286,9 @@ static SDL_VideoDevice *WIN_CreateDevice(void)
     data->dwmapiDLL = SDL_LoadObject("DWMAPI.DLL");
     if (data->dwmapiDLL) {
         /* *INDENT-OFF* */ // clang-format off
-        data->DwmFlush = (HRESULT (WINAPI *)(void))SDL_LoadFunction(data->dwmapiDLL, "DwmFlush");
-        data->DwmEnableBlurBehindWindow = (HRESULT (WINAPI *)(HWND hwnd, const DWM_BLURBEHIND *pBlurBehind))SDL_LoadFunction(data->dwmapiDLL, "DwmEnableBlurBehindWindow");
-        data->DwmSetWindowAttribute = (HRESULT (WINAPI *)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute))SDL_LoadFunction(data->dwmapiDLL, "DwmSetWindowAttribute");
+        *(SDL_FunctionPointer*)&data->DwmFlush = SDL_LoadFunction(data->dwmapiDLL, "DwmFlush");
+        *(SDL_FunctionPointer*)&data->DwmEnableBlurBehindWindow = SDL_LoadFunction(data->dwmapiDLL, "DwmEnableBlurBehindWindow");
+        *(SDL_FunctionPointer*)&data->DwmSetWindowAttribute = SDL_LoadFunction(data->dwmapiDLL, "DwmSetWindowAttribute");
         /* *INDENT-ON* */ // clang-format on
     } else {
         SDL_ClearError();

@@ -182,7 +182,7 @@ bool VIVANTE_VideoInit(SDL_VideoDevice *_this)
         }
     }
 #define LOAD_FUNC(TYPE, NAME)                                               \
-    videodata->NAME = (TYPE)SDL_LoadFunction(videodata->egl_handle, #NAME); \
+    *(SDL_FunctionPointer*)&videodata->NAME = SDL_LoadFunction(videodata->egl_handle, #NAME); \
     if (!videodata->NAME)                                                   \
         return false;
 

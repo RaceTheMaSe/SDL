@@ -8534,7 +8534,7 @@ static bool D3D12_PrepareDriver(SDL_VideoDevice *_this, SDL_PropertiesID props)
         return false;
     }
 
-    pD3D12CreateDevice = (PFN_D3D12_CREATE_DEVICE)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pD3D12CreateDevice = SDL_LoadFunction(
         d3d12Dll,
         D3D12_CREATE_DEVICE_FUNC);
     if (pD3D12CreateDevice == NULL) {
@@ -8551,7 +8551,7 @@ static bool D3D12_PrepareDriver(SDL_VideoDevice *_this, SDL_PropertiesID props)
         return false;
     }
 
-    pCreateDXGIFactory1 = (pfnCreateDXGIFactory1)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pCreateDXGIFactory1 = SDL_LoadFunction(
         dxgiDll,
         CREATE_DXGI_FACTORY1_FUNC);
     if (pCreateDXGIFactory1 == NULL) {
@@ -8722,7 +8722,7 @@ static bool D3D12_INTERNAL_TryInitializeDXGIDebug(D3D12Renderer *renderer)
         return false;
     }
 
-    pDXGIGetDebugInterface = (pfnDXGIGetDebugInterface)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pDXGIGetDebugInterface = SDL_LoadFunction(
         renderer->dxgidebug_dll,
         DXGI_GET_DEBUG_INTERFACE_FUNC);
     if (pDXGIGetDebugInterface == NULL) {
@@ -8764,7 +8764,7 @@ static bool D3D12_INTERNAL_TryInitializeD3D12Debug(D3D12Renderer *renderer
     }
 #endif
 
-    pD3D12GetDebugInterface = (PFN_D3D12_GET_DEBUG_INTERFACE)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pD3D12GetDebugInterface = SDL_LoadFunction(
         renderer->d3d12_dll,
         D3D12_GET_DEBUG_INTERFACE_FUNC);
     if (pD3D12GetDebugInterface == NULL) {
@@ -9374,13 +9374,13 @@ static SDL_GPUDevice *D3D12_CreateDevice(bool debugMode, bool preferLowPower, SD
     WinPixEventRuntimeFns *fns = &renderer->winpixeventruntimeFns;
     if (renderer->winpixeventruntime_dll) {
         // Load the specific functions we need from the PIX runtime
-        fns->pBeginEventOnCommandList = (pfnBeginEventOnCommandList)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&fns->pBeginEventOnCommandList = SDL_LoadFunction(
             renderer->winpixeventruntime_dll,
             PIX_BEGIN_EVENT_ON_COMMAND_LIST_FUNC);
-        fns->pEndEventOnCommandList = (pfnEndEventOnCommandList)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&fns->pEndEventOnCommandList = SDL_LoadFunction(
             renderer->winpixeventruntime_dll,
             PIX_END_EVENT_ON_COMMAND_LIST_FUNC);
-        fns->pSetMarkerOnCommandList = (pfnSetMarkerOnCommandList)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&fns->pSetMarkerOnCommandList = SDL_LoadFunction(
             renderer->winpixeventruntime_dll,
             PIX_SET_MARKER_ON_COMMAND_LIST_FUNC);
     } else {
@@ -9395,7 +9395,7 @@ static SDL_GPUDevice *D3D12_CreateDevice(bool debugMode, bool preferLowPower, SD
 #endif
 
     // Load the CreateDXGIFactory1 function
-    pCreateDXGIFactory1 = (pfnCreateDXGIFactory1)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pCreateDXGIFactory1 = SDL_LoadFunction(
         renderer->dxgi_dll,
         CREATE_DXGI_FACTORY1_FUNC);
     if (pCreateDXGIFactory1 == NULL) {
@@ -9600,7 +9600,7 @@ static SDL_GPUDevice *D3D12_CreateDevice(bool debugMode, bool preferLowPower, SD
         SET_STRING_ERROR_AND_RETURN("Could not load function: D3D12XboxCreateDevice", NULL);
     }
 #else
-    pD3D12CreateDevice = (PFN_D3D12_CREATE_DEVICE)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&pD3D12CreateDevice = SDL_LoadFunction(
         renderer->d3d12_dll,
         D3D12_CREATE_DEVICE_FUNC);
     if (pD3D12CreateDevice == NULL) {
@@ -9609,7 +9609,7 @@ static SDL_GPUDevice *D3D12_CreateDevice(bool debugMode, bool preferLowPower, SD
     }
 #endif
 
-    renderer->pD3D12SerializeRootSignature = (PFN_D3D12_SERIALIZE_ROOT_SIGNATURE)SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&renderer->pD3D12SerializeRootSignature = SDL_LoadFunction(
         renderer->d3d12_dll,
         D3D12_SERIALIZE_ROOT_SIGNATURE_FUNC);
     if (renderer->pD3D12SerializeRootSignature == NULL) {
@@ -9625,7 +9625,7 @@ static SDL_GPUDevice *D3D12_CreateDevice(bool debugMode, bool preferLowPower, SD
         int d3d12SDKVersion = SDL_GetNumberProperty(props, SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER, 0);
         const char *d3d12SDKPath = SDL_GetStringProperty(props, SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING, ".\\D3D12\\");
 
-        pD3D12GetInterface = (PFN_D3D12_GET_INTERFACE)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&pD3D12GetInterface = SDL_LoadFunction(
             renderer->d3d12_dll,
             D3D12_GET_INTERFACE_FUNC);
         if (pD3D12GetInterface == NULL) {

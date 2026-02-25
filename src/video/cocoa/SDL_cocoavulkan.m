@@ -101,7 +101,7 @@ bool Cocoa_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
 
         SDL_strlcpy(_this->vulkan_config.loader_path, foundPath,
                     SDL_arraysize(_this->vulkan_config.loader_path));
-        vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_LoadFunction(
             _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
     }
 

@@ -48,9 +48,9 @@ bool SDL_InitLibUSB(SDL_LibUSBContext **ctx)
         {
             SDL_libusb_loaded = true;
 #ifdef SDL_LIBUSB_DYNAMIC
-#define LOAD_LIBUSB_SYMBOL(type, func)                                                                      \
-    if ((SDL_libusb_context.func = (type)SDL_LoadFunction(SDL_libusb_handle, "libusb_" #func)) == NULL) {   \
-        SDL_libusb_loaded = false;                                                                          \
+#define LOAD_LIBUSB_SYMBOL(type, func)                                                                                        \
+    if ((*(SDL_FunctionPointer*)&SDL_libusb_context.func = SDL_LoadFunction(SDL_libusb_handle, "libusb_" #func)) == NULL) {   \
+        SDL_libusb_loaded = false;                                                                                            \
     }
 #else
 #define LOAD_LIBUSB_SYMBOL(type, func) \

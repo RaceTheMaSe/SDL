@@ -812,7 +812,7 @@ static HRESULT D3D12_CreateDeviceResources(SDL_Renderer *renderer)
         goto done;
     }
 
-    pCreateDXGIFactory2 = (pfnCreateDXGIFactory2)SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory2");
+    *(SDL_FunctionPointer*)&pCreateDXGIFactory2 = SDL_LoadFunction(data->hDXGIMod, "CreateDXGIFactory2");
     if (!pCreateDXGIFactory2) {
         result = E_FAIL;
         goto done;
@@ -824,7 +824,7 @@ static HRESULT D3D12_CreateDeviceResources(SDL_Renderer *renderer)
         goto done;
     }
 
-    pD3D12CreateDevice = (PFN_D3D12_CREATE_DEVICE)SDL_LoadFunction(data->hD3D12Mod, "D3D12CreateDevice");
+    *(SDL_FunctionPointer*)&pD3D12CreateDevice = SDL_LoadFunction(data->hD3D12Mod, "D3D12CreateDevice");
     if (!pD3D12CreateDevice) {
         result = E_FAIL;
         goto done;
@@ -833,7 +833,7 @@ static HRESULT D3D12_CreateDeviceResources(SDL_Renderer *renderer)
     if (createDebug) {
         PFN_D3D12_GET_DEBUG_INTERFACE D3D12GetDebugInterfaceFunc;
 
-        D3D12GetDebugInterfaceFunc = (PFN_D3D12_GET_DEBUG_INTERFACE)SDL_LoadFunction(data->hD3D12Mod, "D3D12GetDebugInterface");
+        *(SDL_FunctionPointer*)&D3D12GetDebugInterfaceFunc = SDL_LoadFunction(data->hD3D12Mod, "D3D12GetDebugInterface");
         if (!D3D12GetDebugInterfaceFunc) {
             result = E_FAIL;
             goto done;
@@ -857,7 +857,7 @@ static HRESULT D3D12_CreateDeviceResources(SDL_Renderer *renderer)
         pfnCreateDXGIFactory2 DXGIGetDebugInterfaceFunc;
 
         // If the debug hint is set, also create the DXGI factory in debug mode
-        DXGIGetDebugInterfaceFunc = (pfnCreateDXGIFactory2)SDL_LoadFunction(data->hDXGIMod, "DXGIGetDebugInterface1");
+        *(SDL_FunctionPointer*)&DXGIGetDebugInterfaceFunc = SDL_LoadFunction(data->hDXGIMod, "DXGIGetDebugInterface1");
         if (!DXGIGetDebugInterfaceFunc) {
             result = E_FAIL;
             goto done;

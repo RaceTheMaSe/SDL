@@ -113,7 +113,7 @@ static void UnloadLibUringLibrary(void)
 static bool LoadLibUringSyms(void)
 {
     #define SDL_LIBURING_FUNC(ret, fn, args) { \
-        liburing.fn = (SDL_fntype_##fn) SDL_LoadFunction(liburing_handle, #fn); \
+        *(SDL_FunctionPointer*)&liburing.fn = SDL_LoadFunction(liburing_handle, #fn); \
         if (!liburing.fn) { \
             return false; \
         } \

@@ -107,7 +107,7 @@ static bool OPENXR_InitializeAndroidLoader(void)
 
     /* The Khronos OpenXR loader (libopenxr_loader.so) properly exports xrGetInstanceProcAddr.
      * Get it directly from the library - this is the standard approach. */
-    loaderGetProcAddr = (PFN_xrGetInstanceProcAddr)SDL_LoadFunction(openxr_loader.lib, "xrGetInstanceProcAddr");
+    *(SDL_FunctionPointer*)&loaderGetProcAddr = SDL_LoadFunction(openxr_loader.lib, "xrGetInstanceProcAddr");
     
     if (loaderGetProcAddr == NULL) {
         SDL_SetError("Failed to get xrGetInstanceProcAddr from OpenXR loader. "
@@ -301,9 +301,9 @@ SDL_DECLSPEC bool SDLCALL SDL_OpenXR_LoadLibrary(void)
 #endif
         
         /* First try to get functions directly from the forwardloader library */
-        OPENXR_xrEnumerateApiLayerProperties = (PFN_xrEnumerateApiLayerProperties)SDL_LoadFunction(openxr_loader.lib, "xrEnumerateApiLayerProperties");
-        OPENXR_xrCreateInstance = (PFN_xrCreateInstance)SDL_LoadFunction(openxr_loader.lib, "xrCreateInstance");
-        OPENXR_xrEnumerateInstanceExtensionProperties = (PFN_xrEnumerateInstanceExtensionProperties)SDL_LoadFunction(openxr_loader.lib, "xrEnumerateInstanceExtensionProperties");
+        *(SDL_FunctionPointer*)&OPENXR_xrEnumerateApiLayerProperties = SDL_LoadFunction(openxr_loader.lib, "xrEnumerateApiLayerProperties");
+        *(SDL_FunctionPointer*)&OPENXR_xrCreateInstance = SDL_LoadFunction(openxr_loader.lib, "xrCreateInstance");
+        *(SDL_FunctionPointer*)&OPENXR_xrEnumerateInstanceExtensionProperties = SDL_LoadFunction(openxr_loader.lib, "xrEnumerateInstanceExtensionProperties");
 
 #if DEBUG_DYNAMIC_OPENXR
         SDL_Log("SDL/OpenXR: Direct symbols - xrEnumerateApiLayerProperties=%p, xrCreateInstance=%p, xrEnumerateInstanceExtensionProperties=%p",

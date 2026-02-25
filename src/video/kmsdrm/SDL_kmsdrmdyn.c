@@ -54,7 +54,7 @@ static kmsdrmdynlib kmsdrmlibs[] = {
 static void *KMSDRM_GetSym(const char *fnname, int *pHasModule, bool required)
 {
     int i;
-    void *fn = NULL;
+    SDL_FunctionPointer fn = NULL;
     for (i = 0; i < SDL_arraysize(kmsdrmlibs); i++) {
         if (kmsdrmlibs[i].lib) {
             fn = SDL_LoadFunction(kmsdrmlibs[i].lib, fnname);
@@ -75,7 +75,7 @@ static void *KMSDRM_GetSym(const char *fnname, int *pHasModule, bool required)
         *pHasModule = 0; // kill this module.
     }
 
-    return fn;
+    return *(void**)&fn;
 }
 
 #endif // SDL_VIDEO_DRIVER_KMSDRM_DYNAMIC

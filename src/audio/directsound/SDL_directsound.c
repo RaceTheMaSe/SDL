@@ -83,11 +83,11 @@ static bool DSOUND_Load(void)
         SDL_SetError("DirectSound: failed to load DSOUND.DLL");
     } else {
 // Now make sure we have DirectX 8 or better...
-#define DSOUNDLOAD(f)                                  \
-    {                                                  \
-        p##f = (pfn##f)SDL_LoadFunction(DSoundDLL, #f); \
-        if (!p##f)                                     \
-            loaded = false;                                \
+#define DSOUNDLOAD(f)                                                   \
+    {                                                                   \
+        *(SDL_FunctionPointer*)&p##f = SDL_LoadFunction(DSoundDLL, #f); \
+        if (!p##f)                                                      \
+            loaded = false;                                             \
     }
         loaded = true; // will reset if necessary.
         DSOUNDLOAD(DirectSoundCreate8);

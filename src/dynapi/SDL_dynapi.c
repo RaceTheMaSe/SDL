@@ -456,7 +456,7 @@ static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
     HMODULE lib = LoadLibraryA(fname);
     SDL_FunctionPointer result = NULL;
     if (lib) {
-        result = (SDL_FunctionPointer)GetProcAddress(lib, sym);
+        *(FARPROC*)&result = GetProcAddress(lib, sym);
         if (!result) {
             FreeLibrary(lib);
         }

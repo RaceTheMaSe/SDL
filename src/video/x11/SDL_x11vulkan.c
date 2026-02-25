@@ -84,7 +84,7 @@ bool X11_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         return false;
     }
     SDL_strlcpy(_this->vulkan_config.loader_path, path, SDL_arraysize(_this->vulkan_config.loader_path));
-    *(PFN_vkVoidFunction*)&vkGetInstanceProcAddr = SDL_LoadFunction(
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_LoadFunction(
         _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
     if (!vkGetInstanceProcAddr) {
         goto fail;
@@ -131,7 +131,7 @@ bool X11_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         if (!videoData->vulkan_xlib_xcb_library) {
             goto fail;
         }
-        *(PFN_vkVoidFunction*)&videoData->vulkan_XGetXCBConnection =
+        *(SDL_FunctionPointer*)&videoData->vulkan_XGetXCBConnection =
             SDL_LoadFunction(videoData->vulkan_xlib_xcb_library, "XGetXCBConnection");
         if (!videoData->vulkan_XGetXCBConnection) {
             SDL_UnloadObject(videoData->vulkan_xlib_xcb_library);

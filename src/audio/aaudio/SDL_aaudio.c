@@ -72,7 +72,7 @@ static bool AAUDIO_LoadFunctions(AAUDIO_Data *data)
 {
 #define SDL_PROC(ret, func, params)                                                             \
     do {                                                                                        \
-        data->func = (ret (*) params)SDL_LoadFunction(data->handle, #func);                     \
+        *(SDL_FunctionPointer*)&data->func = SDL_LoadFunction(data->handle, #func);                     \
         if (!data->func) {                                                                      \
             return SDL_SetError("Couldn't load AAUDIO function %s: %s", #func, SDL_GetError()); \
         }                                                                                       \
@@ -80,7 +80,7 @@ static bool AAUDIO_LoadFunctions(AAUDIO_Data *data)
 
 #define SDL_PROC_OPTIONAL(ret, func, params)                                                          \
     do {                                                                                              \
-        data->func = (ret (*) params)SDL_LoadFunction(data->handle, #func);  /* if it fails, okay. */ \
+        *(SDL_FunctionPointer*)&data->func = SDL_LoadFunction(data->handle, #func);  /* if it fails, okay. */ \
     } while (0);
 #include "SDL_aaudiofuncs.h"
     return true;

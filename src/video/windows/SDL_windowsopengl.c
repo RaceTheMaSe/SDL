@@ -132,29 +132,19 @@ bool WIN_GL_LoadLibrary(SDL_VideoDevice *_this, const char *path)
     // Load function pointers
     handle = _this->gl_config.dll_handle;
     /* *INDENT-OFF* */ // clang-format off
-    _this->gl_data->wglGetProcAddress = (PROC (WINAPI *)(const char *))
-        SDL_LoadFunction(handle, "wglGetProcAddress");
-    _this->gl_data->wglCreateContext = (HGLRC (WINAPI *)(HDC))
-        SDL_LoadFunction(handle, "wglCreateContext");
-    _this->gl_data->wglDeleteContext = (BOOL (WINAPI *)(HGLRC))
-        SDL_LoadFunction(handle, "wglDeleteContext");
-    _this->gl_data->wglMakeCurrent = (BOOL (WINAPI *)(HDC, HGLRC))
-        SDL_LoadFunction(handle, "wglMakeCurrent");
-    _this->gl_data->wglShareLists = (BOOL (WINAPI *)(HGLRC, HGLRC))
-        SDL_LoadFunction(handle, "wglShareLists");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglGetProcAddress = SDL_LoadFunction(handle, "wglGetProcAddress");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglCreateContext = SDL_LoadFunction(handle, "wglCreateContext");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglDeleteContext = SDL_LoadFunction(handle, "wglDeleteContext");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglMakeCurrent = SDL_LoadFunction(handle, "wglMakeCurrent");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglShareLists = SDL_LoadFunction(handle, "wglShareLists");
     /* *INDENT-ON* */ // clang-format on
 
 #if defined(SDL_PLATFORM_XBOXONE) || defined(SDL_PLATFORM_XBOXSERIES)
-    _this->gl_data->wglSwapBuffers = (BOOL(WINAPI *)(HDC))
-        SDL_LoadFunction(handle, "wglSwapBuffers");
-    _this->gl_data->wglDescribePixelFormat = (int(WINAPI *)(HDC, int, UINT, LPPIXELFORMATDESCRIPTOR))
-        SDL_LoadFunction(handle, "wglDescribePixelFormat");
-    _this->gl_data->wglChoosePixelFormat = (int(WINAPI *)(HDC, const PIXELFORMATDESCRIPTOR *))
-        SDL_LoadFunction(handle, "wglChoosePixelFormat");
-    _this->gl_data->wglSetPixelFormat = (BOOL(WINAPI *)(HDC, int, const PIXELFORMATDESCRIPTOR *))
-        SDL_LoadFunction(handle, "wglSetPixelFormat");
-    _this->gl_data->wglGetPixelFormat = (int(WINAPI *)(HDC hdc))
-        SDL_LoadFunction(handle, "wglGetPixelFormat");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglSwapBuffers = SDL_LoadFunction(handle, "wglSwapBuffers");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglDescribePixelFormat = SDL_LoadFunction(handle, "wglDescribePixelFormat");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglChoosePixelFormat = SDL_LoadFunction(handle, "wglChoosePixelFormat");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglSetPixelFormat = SDL_LoadFunction(handle, "wglSetPixelFormat");
+    *(SDL_FunctionPointer*)&_this->gl_data->wglGetPixelFormat = SDL_LoadFunction(handle, "wglGetPixelFormat");
 #endif
 
     if (!_this->gl_data->wglGetProcAddress ||
@@ -218,10 +208,10 @@ SDL_FunctionPointer WIN_GL_GetProcAddress(SDL_VideoDevice *_this, const char *pr
     SDL_FunctionPointer func;
 
     // This is to pick up extensions
-    func = (SDL_FunctionPointer)_this->gl_data->wglGetProcAddress(proc);
+    *(PROC*)&func = _this->gl_data->wglGetProcAddress(proc);
     if (!func) {
         // This is probably a normal GL function
-        func = (SDL_FunctionPointer)GetProcAddress((HMODULE)_this->gl_config.dll_handle, proc);
+        *(FARPROC*)&func = GetProcAddress((HMODULE)_this->gl_config.dll_handle, proc);
     }
     return func;
 }
@@ -458,11 +448,11 @@ void WIN_GL_InitExtensions(SDL_VideoDevice *_this)
     _this->gl_data->HAS_WGL_ARB_pixel_format = false;
     if (HasExtension("WGL_ARB_pixel_format", extensions)) {
         /* *INDENT-OFF* */ // clang-format off
-        _this->gl_data->wglChoosePixelFormatARB =
-            (BOOL (WINAPI *)(HDC, const int *, const FLOAT *, UINT, int *, UINT *))
+        *(SDL_FunctionPointer*)&_this->gl_data->wglChoosePixelFormatARB =
+            // (BOOL (WINAPI *)(HDC, const int *, const FLOAT *, UINT, int *, UINT *))
             WIN_GL_GetProcAddress(_this, "wglChoosePixelFormatARB");
-        _this->gl_data->wglGetPixelFormatAttribivARB =
-            (BOOL (WINAPI *)(HDC, int, int, UINT, const int *, int *))
+        *(SDL_FunctionPointer*)&_this->gl_data->wglGetPixelFormatAttribivARB =
+            // (BOOL (WINAPI *)(HDC, int, int, UINT, const int *, int *))
             WIN_GL_GetProcAddress(_this, "wglGetPixelFormatAttribivARB");
         /* *INDENT-ON* */ // clang-format on
 
@@ -475,11 +465,11 @@ void WIN_GL_InitExtensions(SDL_VideoDevice *_this)
     // Check for WGL_EXT_swap_control
     _this->gl_data->HAS_WGL_EXT_swap_control_tear = false;
     if (HasExtension("WGL_EXT_swap_control", extensions)) {
-        _this->gl_data->wglSwapIntervalEXT =
-            (BOOL (WINAPI *)(int))
+        *(SDL_FunctionPointer*)&_this->gl_data->wglSwapIntervalEXT =
+            // (BOOL (WINAPI *)(int))
             WIN_GL_GetProcAddress(_this, "wglSwapIntervalEXT");
-        _this->gl_data->wglGetSwapIntervalEXT =
-            (int (WINAPI *)(void))
+        *(SDL_FunctionPointer*)&_this->gl_data->wglGetSwapIntervalEXT =
+            // (int (WINAPI *)(void))
             WIN_GL_GetProcAddress(_this, "wglGetSwapIntervalEXT");
         if (HasExtension("WGL_EXT_swap_control_tear", extensions)) {
             _this->gl_data->HAS_WGL_EXT_swap_control_tear = true;

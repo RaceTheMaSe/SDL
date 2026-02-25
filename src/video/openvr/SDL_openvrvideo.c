@@ -810,7 +810,7 @@ static SDL_FunctionPointer OPENVR_GL_GetProcAddress(SDL_VideoDevice *_this, cons
 {
     SDL_FunctionPointer result = NULL;
     if (ov_wglGetProcAddress) {
-        result = (SDL_FunctionPointer)ov_wglGetProcAddress(proc);
+        *(PROC*)&result = ov_wglGetProcAddress(proc);
         if (result) {
             return result;
         }
@@ -888,10 +888,10 @@ static SDL_GLContext OPENVR_GL_CreateContext(SDL_VideoDevice *_this, SDL_Window 
             return NULL;
         }
 
-        ov_wglMakeCurrent = (BOOL(*)(HDC, HGLRC))GetProcAddress(opengl, "wglMakeCurrent");
-        ov_wglCreateContext = (HGLRC(*)(HDC))GetProcAddress(opengl, "wglCreateContext");
-        ov_wglGetProcAddress = (PROC(*)(LPCSTR))GetProcAddress(opengl, "wglGetProcAddress");
-        ov_wglDeleteContext = (BOOL(*)(HGLRC))GetProcAddress(opengl, "wglDeleteContext");
+        *(FARPROC*)&ov_wglMakeCurrent = GetProcAddress(opengl, "wglMakeCurrent");
+        *(FARPROC*)&ov_wglCreateContext = GetProcAddress(opengl, "wglCreateContext");
+        *(FARPROC*)&ov_wglGetProcAddress = GetProcAddress(opengl, "wglGetProcAddress");
+        *(FARPROC*)&ov_wglDeleteContext = GetProcAddress(opengl, "wglDeleteContext");
         if (!ov_wglMakeCurrent || !ov_wglCreateContext) {
             SDL_SetError("Cannot get wgl context procs(%p, %p)", ov_wglMakeCurrent, ov_wglCreateContext);
             return NULL;

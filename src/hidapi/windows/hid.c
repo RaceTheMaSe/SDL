@@ -146,7 +146,7 @@ static int lookup_functions(void)
 		goto err;
 	}
 
-#define RESOLVE(lib_handle, x) x = (x##_)GetProcAddress(lib_handle, #x); if (!x) goto err;
+#define RESOLVE(lib_handle, x) *(FARPROC*)&x = GetProcAddress(lib_handle, #x); if (!x) goto err;
 
 	RESOLVE(hid_lib_handle, HidD_GetHidGuid);
 	RESOLVE(hid_lib_handle, HidD_GetAttributes);
@@ -1531,7 +1531,8 @@ int HID_API_EXPORT HID_API_CALL hid_get_input_report(hid_device *dev, unsigned c
 void HID_API_EXPORT HID_API_CALL hid_close(hid_device *dev)
 {
 	typedef BOOL (WINAPI *CancelIoEx_t)(HANDLE hFile, LPOVERLAPPED lpOverlapped);
-	CancelIoEx_t CancelIoExFunc = (CancelIoEx_t)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "CancelIoEx");
+	CancelIoEx_t CancelIoExFunc;
+	*(FARPROC*)&CancelIoExFunc = GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "CancelIoEx");
 
 	if (!dev)
 		return;
