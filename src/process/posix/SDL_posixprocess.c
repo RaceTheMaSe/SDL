@@ -79,7 +79,7 @@ static void IgnoreSignal(int sig)
 
     sigaction(SIGPIPE, NULL, &action);
 #ifdef HAVE_SA_SIGACTION
-    if (action.sa_handler == SIG_DFL && *(SDL_FunctionPointer*)&action.sa_sigaction == (SDL_FunctionPointer)SIG_DFL) {
+    if (action.sa_handler == SIG_DFL && *(__sighandler_t*)&action.sa_sigaction == SIG_DFL) {
 #else
     if (action.sa_handler == SIG_DFL) {
 #endif
