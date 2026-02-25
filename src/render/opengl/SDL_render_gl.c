@@ -1713,7 +1713,8 @@ static void GL_DestroyRenderer(SDL_Renderer *renderer)
 
         GL_ClearErrors(renderer);
         if (data->GL_ARB_debug_output_supported) {
-            PFNGLDEBUGMESSAGECALLBACKARBPROC glDebugMessageCallbackARBFunc = (PFNGLDEBUGMESSAGECALLBACKARBPROC)SDL_GL_GetProcAddress("glDebugMessageCallbackARB");
+            PFNGLDEBUGMESSAGECALLBACKARBPROC glDebugMessageCallbackARBFunc;
+            *(SDL_FunctionPointer*)&glDebugMessageCallbackARBFunc = SDL_GL_GetProcAddress("glDebugMessageCallbackARB");
 
             // Uh oh, we don't have a safe way of removing ourselves from the callback chain, if it changed after we set our callback.
             // For now, just always replace the callback with the original one
@@ -1863,7 +1864,8 @@ static bool GL_CreateRenderer(SDL_Renderer *renderer, SDL_Window *window, SDL_Pr
         data->debug_enabled = true;
     }
     if (data->debug_enabled && SDL_GL_ExtensionSupported("GL_ARB_debug_output")) {
-        PFNGLDEBUGMESSAGECALLBACKARBPROC glDebugMessageCallbackARBFunc = (PFNGLDEBUGMESSAGECALLBACKARBPROC)SDL_GL_GetProcAddress("glDebugMessageCallbackARB");
+        PFNGLDEBUGMESSAGECALLBACKARBPROC glDebugMessageCallbackARBFunc;
+        *(SDL_FunctionPointer*)&glDebugMessageCallbackARBFunc = SDL_GL_GetProcAddress("glDebugMessageCallbackARB");
 
         data->GL_ARB_debug_output_supported = true;
         data->glGetPointerv(GL_DEBUG_CALLBACK_FUNCTION_ARB, (GLvoid **)(char *)&data->next_error_callback);
@@ -1915,7 +1917,7 @@ static bool GL_CreateRenderer(SDL_Renderer *renderer, SDL_Window *window, SDL_Pr
 
     // Check for multitexture support
     if (SDL_GL_ExtensionSupported("GL_ARB_multitexture")) {
-        data->glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC)SDL_GL_GetProcAddress("glActiveTextureARB");
+        *(SDL_FunctionPointer*)&data->glActiveTextureARB = SDL_GL_GetProcAddress("glActiveTextureARB");
         if (data->glActiveTextureARB) {
             data->GL_ARB_multitexture_supported = true;
             data->glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &data->num_texture_units);
@@ -1993,15 +1995,15 @@ static bool GL_CreateRenderer(SDL_Renderer *renderer, SDL_Window *window, SDL_Pr
 
     if (SDL_GL_ExtensionSupported("GL_EXT_framebuffer_object")) {
         data->GL_EXT_framebuffer_object_supported = true;
-        data->glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)
+        *(SDL_FunctionPointer*)&data->glGenFramebuffersEXT =
             SDL_GL_GetProcAddress("glGenFramebuffersEXT");
-        data->glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)
+        *(SDL_FunctionPointer*)&data->glDeleteFramebuffersEXT =
             SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
-        data->glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)
+        *(SDL_FunctionPointer*)&data->glFramebufferTexture2DEXT =
             SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
-        data->glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)
+        *(SDL_FunctionPointer*)&data->glBindFramebufferEXT =
             SDL_GL_GetProcAddress("glBindFramebufferEXT");
-        data->glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)
+        *(SDL_FunctionPointer*)&data->glCheckFramebufferStatusEXT =
             SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
     } else {
         SDL_SetError("Can't create render targets, GL_EXT_framebuffer_object not available");

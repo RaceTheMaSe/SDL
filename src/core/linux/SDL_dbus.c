@@ -41,10 +41,10 @@ SDL_ELF_NOTE_DLOPEN(
 static bool LoadDBUSSyms(void)
 {
 #define SDL_DBUS_SYM2_OPTIONAL(TYPE, x, y)                   \
-    dbus.x = (TYPE)SDL_LoadFunction(dbus_handle, #y)
+    *(SDL_FunctionPointer*)&dbus.x = SDL_LoadFunction(dbus_handle, #y)
 
 #define SDL_DBUS_SYM2(TYPE, x, y)                            \
-    if (!(dbus.x = (TYPE)SDL_LoadFunction(dbus_handle, #y))) \
+    if (!(*(SDL_FunctionPointer*)&dbus.x = SDL_LoadFunction(dbus_handle, #y))) \
         return false
 
 #define SDL_DBUS_SYM_OPTIONAL(TYPE, x) \

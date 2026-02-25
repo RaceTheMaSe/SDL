@@ -116,7 +116,7 @@ bool OFFSCREEN_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
 
         SDL_strlcpy(_this->vulkan_config.loader_path, foundPath,
                     SDL_arraysize(_this->vulkan_config.loader_path));
-        vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_LoadFunction(
+        *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_LoadFunction(
             _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
 
         if (!vkGetInstanceProcAddr) {
@@ -125,16 +125,16 @@ bool OFFSCREEN_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         }
     }
 
-    _this->vulkan_config.vkGetInstanceProcAddr = (SDL_FunctionPointer)vkGetInstanceProcAddr;
-    _this->vulkan_config.vkEnumerateInstanceExtensionProperties =
-        (SDL_FunctionPointer)((PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr)(
+    *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
+    *(PFN_vkVoidFunction*)&_this->vulkan_config.vkEnumerateInstanceExtensionProperties =
+        (*(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr)(
             VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
     if (!_this->vulkan_config.vkEnumerateInstanceExtensionProperties) {
         goto fail;
     }
     extensions = SDL_Vulkan_CreateInstanceExtensionsList(
-        (PFN_vkEnumerateInstanceExtensionProperties)
-            _this->vulkan_config.vkEnumerateInstanceExtensionProperties,
+        *(PFN_vkEnumerateInstanceExtensionProperties*)
+            &_this->vulkan_config.vkEnumerateInstanceExtensionProperties,
         &extensionCount);
     if (!extensions) {
         goto fail;
@@ -196,7 +196,7 @@ char const *const *OFFSCREEN_Vulkan_GetInstanceExtensions(SDL_VideoDevice *_this
                 And I want a smaller footprint for the first pass*/
             if ( _this->vulkan_config.vkEnumerateInstanceExtensionProperties ) {
                 enumerateExtensions = SDL_Vulkan_CreateInstanceExtensionsList(
-                    (PFN_vkEnumerateInstanceExtensionProperties)
+                    *(PFN_vkEnumerateInstanceExtensionProperties*)&
                         _this->vulkan_config.vkEnumerateInstanceExtensionProperties,
                     &enumerateExtensionCount);
                 for (i = 0; i < enumerateExtensionCount; i++) {
@@ -233,9 +233,9 @@ bool OFFSCREEN_Vulkan_CreateSurface(SDL_VideoDevice *_this,
         return SDL_SetError("Vulkan is not loaded");
     }
 
-    PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
-    PFN_vkCreateHeadlessSurfaceEXT vkCreateHeadlessSurfaceEXT =
-        (PFN_vkCreateHeadlessSurfaceEXT)vkGetInstanceProcAddr(instance, "vkCreateHeadlessSurfaceEXT");
+    PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr;
+    PFN_vkCreateHeadlessSurfaceEXT vkCreateHeadlessSurfaceEXT;
+    *(PFN_vkVoidFunction*)&vkCreateHeadlessSurfaceEXT = vkGetInstanceProcAddr(instance, "vkCreateHeadlessSurfaceEXT");
     VkHeadlessSurfaceCreateInfoEXT createInfo;
     VkResult result;
     if (!vkCreateHeadlessSurfaceEXT) {

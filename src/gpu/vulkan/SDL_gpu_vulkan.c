@@ -11909,7 +11909,7 @@ static Uint8 VULKAN_INTERNAL_CreateInstance(VulkanRenderer *renderer, VulkanFeat
         xrCreateInfo.type = XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR;
         xrCreateInfo.vulkanCreateInfo = &createInfo;
         xrCreateInfo.systemId = renderer->xrSystemId;
-        xrCreateInfo.pfnGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+        *(SDL_FunctionPointer*)&xrCreateInfo.pfnGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
         SDL_assert(xrCreateInfo.pfnGetInstanceProcAddr);
         if ((xrResult = xrCreateVulkanInstanceKHR(renderer->xrInstance, &xrCreateInfo, &renderer->instance, &vulkanResult)) != XR_SUCCESS) {
             SDL_LogDebug(SDL_LOG_CATEGORY_GPU, "Failed to create vulkan instance, reason %d, %d", xrResult, vulkanResult);
@@ -12526,7 +12526,7 @@ static Uint8 VULKAN_INTERNAL_CreateLogicalDevice(
         xrDeviceCreateInfo.vulkanCreateInfo = &deviceCreateInfo;
         xrDeviceCreateInfo.systemId = renderer->xrSystemId;
         xrDeviceCreateInfo.vulkanPhysicalDevice = renderer->physicalDevice;
-        xrDeviceCreateInfo.pfnGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+        *(SDL_FunctionPointer*)&xrDeviceCreateInfo.pfnGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
         SDL_assert(xrDeviceCreateInfo.pfnGetInstanceProcAddr);
         if ((xrResult = xrCreateVulkanDeviceKHR(renderer->xrInstance, &xrDeviceCreateInfo, &renderer->logicalDevice, &vulkanResult)) != XR_SUCCESS) {
             SDL_LogError(SDL_LOG_CATEGORY_GPU, "Failed to create OpenXR Vulkan logical device, result %d, %d", xrResult, vulkanResult);
@@ -12577,7 +12577,7 @@ static void VULKAN_INTERNAL_LoadEntryPoints(void)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
 #ifdef HAVE_GCC_DIAGNOSTIC_PRAGMA
 #pragma GCC diagnostic pop
 #endif
@@ -12590,7 +12590,7 @@ static void VULKAN_INTERNAL_LoadEntryPoints(void)
     }
 
 #define VULKAN_GLOBAL_FUNCTION(name)                                                                      \
-    name = (PFN_##name)vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);                                      \
+    *(PFN_vkVoidFunction*)&name = vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);                                      \
     if (name == NULL) {                                                                                   \
         SDL_LogWarn(SDL_LOG_CATEGORY_GPU, "vkGetInstanceProcAddr(VK_NULL_HANDLE, \"" #name "\") failed"); \
         return;                                                                                           \

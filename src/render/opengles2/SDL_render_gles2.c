@@ -284,7 +284,7 @@ static bool GLES2_LoadFunctions(GLES2_RenderData *data)
 #else
 #define SDL_PROC(ret, func, params)                                                            \
     do {                                                                                       \
-        data->func = (ret (APIENTRY *) params)SDL_GL_GetProcAddress(#func);                                             \
+        *(SDL_FunctionPointer*)&data->func = SDL_GL_GetProcAddress(#func);                     \
         if (!data->func) {                                                                     \
             return SDL_SetError("Couldn't load GLES2 function %s: %s", #func, SDL_GetError()); \
         }                                                                                      \

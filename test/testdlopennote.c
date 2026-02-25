@@ -30,7 +30,7 @@ static bool libpng_init(void)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load libpng library \"" PNG_SHARED_LIBRARY "\"");
         return false;
     }
-    libpng16.png_sig_cmp = (png_sig_cmp_fn *)SDL_LoadFunction(libpng16.library, "png_sig_cmp");
+    *(SDL_FunctionPointer*)&libpng16.png_sig_cmp = SDL_LoadFunction(libpng16.library, "png_sig_cmp");
     return libpng16.png_sig_cmp != NULL;
 }
 

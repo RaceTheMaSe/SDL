@@ -4811,7 +4811,7 @@ bool SDL_GL_ExtensionSupported(const char *extension)
 
     // Lookup the available extensions
 
-    glGetStringFunc = (PFNGLGETSTRINGPROC)SDL_GL_GetProcAddress("glGetString");
+    *(SDL_FunctionPointer*)&glGetStringFunc = SDL_GL_GetProcAddress("glGetString");
     if (!glGetStringFunc) {
         return false;
     }
@@ -4822,8 +4822,8 @@ bool SDL_GL_ExtensionSupported(const char *extension)
         GLint num_exts = 0;
         GLint i;
 
-        glGetStringiFunc = (PFNGLGETSTRINGIPROC)SDL_GL_GetProcAddress("glGetStringi");
-        glGetIntegervFunc = (PFNGLGETINTEGERVPROC)SDL_GL_GetProcAddress("glGetIntegerv");
+        *(SDL_FunctionPointer*)&glGetStringiFunc = SDL_GL_GetProcAddress("glGetStringi");
+        *(SDL_FunctionPointer*)&glGetIntegervFunc = SDL_GL_GetProcAddress("glGetIntegerv");
         if ((!glGetStringiFunc) || (!glGetIntegervFunc)) {
             return false;
         }
@@ -5299,7 +5299,7 @@ bool SDL_GL_GetAttribute(SDL_GLAttr attr, int *value)
     }
 
 #ifdef SDL_VIDEO_OPENGL
-    glGetStringFunc = (PFNGLGETSTRINGPROC)SDL_GL_GetProcAddress("glGetString");
+    *(SDL_FunctionPointer*)&glGetStringFunc = SDL_GL_GetProcAddress("glGetString");
     if (!glGetStringFunc) {
         return false;
     }
@@ -5315,7 +5315,7 @@ bool SDL_GL_GetAttribute(SDL_GLAttr attr, int *value)
             glGetIntegervFunc(GL_DRAW_FRAMEBUFFER_BINDING, &current_fbo);
         }
 
-        glGetFramebufferAttachmentParameterivFunc = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameteriv");
+        *(SDL_FunctionPointer*)&glGetFramebufferAttachmentParameterivFunc = SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameteriv");
         if (glGetFramebufferAttachmentParameterivFunc) {
             if (glBindFramebufferFunc && (current_fbo != 0)) {
                 glBindFramebufferFunc(GL_DRAW_FRAMEBUFFER, 0);

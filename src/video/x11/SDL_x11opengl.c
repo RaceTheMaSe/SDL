@@ -206,23 +206,23 @@ bool X11_GL_LoadLibrary(SDL_VideoDevice *_this, const char *path)
     *(void**)&_this->gl_data->glXGetProcAddress = 
         /*(__GLXextFuncPtr (*)(const GLubyte *))*/
             GL_LoadFunction(handle, "glXGetProcAddressARB");
-    _this->gl_data->glXChooseVisual =
-        (XVisualInfo * (*)(Display *, int, int *))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXChooseVisual =
+        // (XVisualInfo * (*)(Display *, int, int *))
             X11_GL_GetProcAddress(_this, "glXChooseVisual");
-    _this->gl_data->glXCreateContext =
-        (GLXContext(*)(Display *, XVisualInfo *, GLXContext, int))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXCreateContext =
+        // (GLXContext(*)(Display *, XVisualInfo *, GLXContext, int))
             X11_GL_GetProcAddress(_this, "glXCreateContext");
-    _this->gl_data->glXDestroyContext =
-        (void (*)(Display *, GLXContext))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXDestroyContext =
+        // (void (*)(Display *, GLXContext))
             X11_GL_GetProcAddress(_this, "glXDestroyContext");
-    _this->gl_data->glXMakeCurrent =
-        (int (*)(Display *, GLXDrawable, GLXContext))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXMakeCurrent =
+        // (int (*)(Display *, GLXDrawable, GLXContext))
             X11_GL_GetProcAddress(_this, "glXMakeCurrent");
-    _this->gl_data->glXSwapBuffers =
-        (void (*)(Display *, GLXDrawable))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXSwapBuffers =
+        // (void (*)(Display *, GLXDrawable))
             X11_GL_GetProcAddress(_this, "glXSwapBuffers");
-    _this->gl_data->glXQueryDrawable =
-        (void (*)(Display *, GLXDrawable, int, unsigned int *))
+    *(SDL_FunctionPointer*)&_this->gl_data->glXQueryDrawable =
+        // (void (*)(Display *, GLXDrawable, int, unsigned int *))
             X11_GL_GetProcAddress(_this, "glXQueryDrawable");
 
     if (!_this->gl_data->glXQueryExtension ||
@@ -352,12 +352,14 @@ static void X11_GL_InitExtensions(SDL_VideoDevice *_this)
 
     vinfo = X11_GL_GetVisual(_this, display, screen, false);
     if (vinfo) {
-        GLXContext (*glXGetCurrentContextFunc)(void) =
-            (GLXContext(*)(void))
+        GLXContext (*glXGetCurrentContextFunc)(void);
+        *(SDL_FunctionPointer*)&glXGetCurrentContextFunc =
+            // (GLXContext(*)(void))
                 X11_GL_GetProcAddress(_this, "glXGetCurrentContext");
 
-        GLXDrawable (*glXGetCurrentDrawableFunc)(void) =
-            (GLXDrawable(*)(void))
+        GLXDrawable (*glXGetCurrentDrawableFunc)(void);
+        *(SDL_FunctionPointer*)&glXGetCurrentDrawableFunc =
+            // (GLXDrawable(*)(void))
                 X11_GL_GetProcAddress(_this, "glXGetCurrentDrawable");
 
         if (glXGetCurrentContextFunc && glXGetCurrentDrawableFunc) {
@@ -384,8 +386,9 @@ static void X11_GL_InitExtensions(SDL_VideoDevice *_this)
         X11_XFree(vinfo);
     }
 
-    glXQueryExtensionsStringFunc =
-        (const char *(*)(Display *, int))X11_GL_GetProcAddress(_this,
+    *(SDL_FunctionPointer*)&glXQueryExtensionsStringFunc =
+        // (const char *(*)(Display *, int))
+        X11_GL_GetProcAddress(_this,
                                                                "glXQueryExtensionsString");
     if (glXQueryExtensionsStringFunc) {
         extensions = glXQueryExtensionsStringFunc(display, screen);
@@ -396,8 +399,8 @@ static void X11_GL_InitExtensions(SDL_VideoDevice *_this)
     // Check for GLX_EXT_swap_control(_tear)
     _this->gl_data->HAS_GLX_EXT_swap_control_tear = false;
     if (HasExtension("GLX_EXT_swap_control", extensions)) {
-        _this->gl_data->glXSwapIntervalEXT =
-            (void (*)(Display *, GLXDrawable, int))
+        *(SDL_FunctionPointer*)&_this->gl_data->glXSwapIntervalEXT =
+            // (void (*)(Display *, GLXDrawable, int))
                 X11_GL_GetProcAddress(_this, "glXSwapIntervalEXT");
         if (HasExtension("GLX_EXT_swap_control_tear", extensions)) {
             _this->gl_data->HAS_GLX_EXT_swap_control_tear = true;
@@ -406,29 +409,31 @@ static void X11_GL_InitExtensions(SDL_VideoDevice *_this)
 
     // Check for GLX_MESA_swap_control
     if (HasExtension("GLX_MESA_swap_control", extensions)) {
-        _this->gl_data->glXSwapIntervalMESA =
-            (int (*)(int))X11_GL_GetProcAddress(_this, "glXSwapIntervalMESA");
-        _this->gl_data->glXGetSwapIntervalMESA =
-            (int (*)(void))X11_GL_GetProcAddress(_this,
+        *(SDL_FunctionPointer*)&_this->gl_data->glXSwapIntervalMESA =
+            // (int (*)(int))X11_GL_GetProcAddress(_this, "glXSwapIntervalMESA");
+        *(SDL_FunctionPointer*)&_this->gl_data->glXGetSwapIntervalMESA =
+            // (int (*)(void))
+            X11_GL_GetProcAddress(_this,
                                                  "glXGetSwapIntervalMESA");
     }
 
     // Check for GLX_SGI_swap_control
     if (HasExtension("GLX_SGI_swap_control", extensions)) {
-        _this->gl_data->glXSwapIntervalSGI =
-            (int (*)(int))X11_GL_GetProcAddress(_this, "glXSwapIntervalSGI");
+        *(SDL_FunctionPointer*)&_this->gl_data->glXSwapIntervalSGI =
+            // (int (*)(int))
+            X11_GL_GetProcAddress(_this, "glXSwapIntervalSGI");
     }
 
     // Check for GLX_ARB_create_context
     if (HasExtension("GLX_ARB_create_context", extensions)) {
-        _this->gl_data->glXCreateContextAttribsARB =
-            (GLXContext(*)(Display *, GLXFBConfig, GLXContext, Bool, const int *))
+        *(SDL_FunctionPointer*)&_this->gl_data->glXCreateContextAttribsARB =
+            // (GLXContext(*)(Display *, GLXFBConfig, GLXContext, Bool, const int *))
                 X11_GL_GetProcAddress(_this, "glXCreateContextAttribsARB");
-        _this->gl_data->glXChooseFBConfig =
-            (GLXFBConfig * (*)(Display *, int, const int *, int *))
+        *(SDL_FunctionPointer*)&_this->gl_data->glXChooseFBConfig =
+            // (GLXFBConfig * (*)(Display *, int, const int *, int *))
                 X11_GL_GetProcAddress(_this, "glXChooseFBConfig");
-        _this->gl_data->glXGetVisualFromFBConfig =
-            (XVisualInfo * (*)(Display *, GLXFBConfig))
+        *(SDL_FunctionPointer*)&_this->gl_data->glXGetVisualFromFBConfig =
+            // (XVisualInfo * (*)(Display *, GLXFBConfig))
                 X11_GL_GetProcAddress(_this, "glXGetVisualFromFBConfig");
     }
 

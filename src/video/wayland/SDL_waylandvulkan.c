@@ -72,20 +72,20 @@ bool Wayland_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
     }
     SDL_strlcpy(_this->vulkan_config.loader_path, path,
                 SDL_arraysize(_this->vulkan_config.loader_path));
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_LoadFunction(
+    *(PFN_vkVoidFunction*)&vkGetInstanceProcAddr = SDL_LoadFunction(
         _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
     if (!vkGetInstanceProcAddr) {
         goto fail;
     }
-    _this->vulkan_config.vkGetInstanceProcAddr = (SDL_FunctionPointer)vkGetInstanceProcAddr;
+    *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
     _this->vulkan_config.vkEnumerateInstanceExtensionProperties =
-        (SDL_FunctionPointer)((PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr)(
+        (*(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr)(
             VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
     if (!_this->vulkan_config.vkEnumerateInstanceExtensionProperties) {
         goto fail;
     }
     extensions = SDL_Vulkan_CreateInstanceExtensionsList(
-        (PFN_vkEnumerateInstanceExtensionProperties)
+        *(PFN_vkEnumerateInstanceExtensionProperties*)&
             _this->vulkan_config.vkEnumerateInstanceExtensionProperties,
         &extensionCount);
     if (!extensions) {
@@ -143,9 +143,10 @@ bool Wayland_Vulkan_CreateSurface(SDL_VideoDevice *_this,
 {
     SDL_WindowData *windowData = window->internal;
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr =
-        (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
-    PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR =
-        (PFN_vkCreateWaylandSurfaceKHR)vkGetInstanceProcAddr(
+        *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr;
+    PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+    *(PFN_vkVoidFunction*)&vkCreateWaylandSurfaceKHR =
+        vkGetInstanceProcAddr(
             instance,
             "vkCreateWaylandSurfaceKHR");
     VkWaylandSurfaceCreateInfoKHR createInfo;
@@ -187,10 +188,11 @@ bool Wayland_Vulkan_GetPresentationSupport(SDL_VideoDevice *_this,
                                                VkPhysicalDevice physicalDevice,
                                                Uint32 queueFamilyIndex)
 {
-    PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr =
-        (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
-    PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR =
-        (PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)vkGetInstanceProcAddr(
+    PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = _this->vulkan_config.vkGetInstanceProcAddr;
+    PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+    *(PFN_vkVoidFunction*)&vkGetPhysicalDeviceWaylandPresentationSupportKHR =
+        vkGetInstanceProcAddr(
             instance,
             "vkGetPhysicalDeviceWaylandPresentationSupportKHR");
 

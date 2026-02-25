@@ -2515,12 +2515,13 @@ static void Wayland_SeatDestroyTouch(SDL_WaylandSeat *seat)
     WAYLAND_wl_list_init(&seat->touch.points);
 }
 
-static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat, enum wl_seat_capability capabilities)
+static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat, uint32_t capabilities)
 {
     SDL_WaylandSeat *seat = (SDL_WaylandSeat *)data;
+    enum wl_seat_capability caps = capabilities;
     char name_fmt[256];
 
-    if ((capabilities & WL_SEAT_CAPABILITY_POINTER) && !seat->pointer.wl_pointer) {
+    if ((caps & WL_SEAT_CAPABILITY_POINTER) && !seat->pointer.wl_pointer) {
         seat->pointer.wl_pointer = wl_seat_get_pointer(wl_seat);
         SDL_zero(seat->pointer.pending_frame.axis);
 
@@ -2541,11 +2542,11 @@ static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat, enum w
         }
 
         SDL_AddMouse(seat->pointer.sdl_id, name_fmt);
-    } else if (!(capabilities & WL_SEAT_CAPABILITY_POINTER) && seat->pointer.wl_pointer) {
+    } else if (!(caps & WL_SEAT_CAPABILITY_POINTER) && seat->pointer.wl_pointer) {
         Wayland_SeatDestroyPointer(seat);
     }
 
-    if ((capabilities & WL_SEAT_CAPABILITY_TOUCH) && !seat->touch.wl_touch) {
+    if ((caps & WL_SEAT_CAPABILITY_TOUCH) && !seat->touch.wl_touch) {
         seat->touch.wl_touch = wl_seat_get_touch(wl_seat);
         wl_touch_set_user_data(seat->touch.wl_touch, seat);
         wl_touch_add_listener(seat->touch.wl_touch, &touch_listener, seat);
@@ -2557,11 +2558,11 @@ static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat, enum w
         }
 
         SDL_AddTouch((SDL_TouchID)(uintptr_t)seat->touch.wl_touch, SDL_TOUCH_DEVICE_DIRECT, name_fmt);
-    } else if (!(capabilities & WL_SEAT_CAPABILITY_TOUCH) && seat->touch.wl_touch) {
+    } else if (!(caps & WL_SEAT_CAPABILITY_TOUCH) && seat->touch.wl_touch) {
         Wayland_SeatDestroyTouch(seat);
     }
 
-    if ((capabilities & WL_SEAT_CAPABILITY_KEYBOARD) && !seat->keyboard.wl_keyboard) {
+    if ((caps & WL_SEAT_CAPABILITY_KEYBOARD) && !seat->keyboard.wl_keyboard) {
         seat->keyboard.wl_keyboard = wl_seat_get_keyboard(wl_seat);
         wl_keyboard_set_user_data(seat->keyboard.wl_keyboard, seat);
         wl_keyboard_add_listener(seat->keyboard.wl_keyboard, &keyboard_listener, seat);
@@ -2575,7 +2576,7 @@ static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat, enum w
         }
 
         SDL_AddKeyboard(seat->keyboard.sdl_id, name_fmt);
-    } else if (!(capabilities & WL_SEAT_CAPABILITY_KEYBOARD) && seat->keyboard.wl_keyboard) {
+    } else if (!(caps & WL_SEAT_CAPABILITY_KEYBOARD) && seat->keyboard.wl_keyboard) {
         Wayland_SeatDestroyKeyboard(seat);
     }
 
@@ -2592,7 +2593,7 @@ static void seat_handle_name(void *data, struct wl_seat *wl_seat, const char *na
 }
 
 static const struct wl_seat_listener seat_listener = {
-    seat_handle_capabilities,
+    &seat_handle_capabilities,
     seat_handle_name, // Version 2
 };
 

@@ -1519,9 +1519,9 @@ static SDL_VideoDevice *OPENVR_CreateDevice(void)
         goto error;
     }
 
-    data->FN_VR_InitInternal = (intptr_t(*)(EVRInitError * peError, EVRApplicationType eType))SDL_LoadFunction(data->openVRLIB, "VR_InitInternal");
-    data->FN_VR_GetVRInitErrorAsEnglishDescription = (const char *(*)(EVRInitError error))SDL_LoadFunction(data->openVRLIB, "VR_GetVRInitErrorAsEnglishDescription");
-    data->FN_VR_GetGenericInterface = (intptr_t (*)(const char *pchInterfaceVersion, EVRInitError * peError))SDL_LoadFunction(data->openVRLIB, "VR_GetGenericInterface");
+    *(SDL_FunctionPointer*)&data->FN_VR_InitInternal = SDL_LoadFunction(data->openVRLIB, "VR_InitInternal");
+    *(SDL_FunctionPointer*)&data->FN_VR_GetVRInitErrorAsEnglishDescription = SDL_LoadFunction(data->openVRLIB, "VR_GetVRInitErrorAsEnglishDescription");
+    *(SDL_FunctionPointer*)&data->FN_VR_GetGenericInterface = SDL_LoadFunction(data->openVRLIB, "VR_GetGenericInterface");
     if (!data->FN_VR_InitInternal || !data->FN_VR_GetVRInitErrorAsEnglishDescription || !data->FN_VR_GetGenericInterface) {
         goto error;
     }

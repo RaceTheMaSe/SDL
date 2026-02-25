@@ -104,13 +104,13 @@ struct VulkanVideoContext
 
 static int loadGlobalFunctions(VulkanVideoContext *context)
 {
-    context->vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    *(SDL_FunctionPointer*)&context->vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
     if (!context->vkGetInstanceProcAddr) {
         return -1;
     }
 
 #define VULKAN_GLOBAL_FUNCTION(name)                                                        \
-    context->name = (PFN_##name)context->vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);      \
+    *(PFN_vkVoidFunction*)&context->name = context->vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);      \
     if (!context->name) {                                                                   \
         return SDL_SetError("vkGetInstanceProcAddr(VK_NULL_HANDLE, \"" #name "\") failed"); \
     }
@@ -127,7 +127,7 @@ static int loadInstanceFunctions(VulkanVideoContext *context)
 {
 #define VULKAN_GLOBAL_FUNCTION(name)
 #define VULKAN_INSTANCE_FUNCTION(name)                                                    \
-    context->name = (PFN_##name)context->vkGetInstanceProcAddr(context->instance, #name); \
+    *(PFN_vkVoidFunction*)&context->name = context->vkGetInstanceProcAddr(context->instance, #name); \
     if (!context->name) {                                                                 \
         return SDL_SetError("vkGetInstanceProcAddr(instance, \"" #name "\") failed");     \
     }
@@ -144,7 +144,7 @@ static int loadDeviceFunctions(VulkanVideoContext *context)
 #define VULKAN_GLOBAL_FUNCTION(name)
 #define VULKAN_INSTANCE_FUNCTION(name)
 #define VULKAN_DEVICE_FUNCTION(name)                                                  \
-    context->name = (PFN_##name)context->vkGetDeviceProcAddr(context->device, #name); \
+    *(PFN_vkVoidFunction*)&context->name = context->vkGetDeviceProcAddr(context->device, #name); \
     if (!context->name) {                                                             \
         return SDL_SetError("vkGetDeviceProcAddr(device, \"" #name "\") failed");     \
     }

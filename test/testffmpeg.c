@@ -201,10 +201,10 @@ static bool CreateWindowAndRenderer(SDL_WindowFlags window_flags, const char *dr
         SDL_free(extensions);
 
         if (SDL_GL_ExtensionSupported("GL_OES_EGL_image")) {
-            glEGLImageTargetTexture2DOESFunc = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)eglGetProcAddress("glEGLImageTargetTexture2DOES");
+            *(__eglMustCastToProperFunctionPointerType*)&glEGLImageTargetTexture2DOESFunc = eglGetProcAddress("glEGLImageTargetTexture2DOES");
         }
 
-        glActiveTextureARBFunc = (PFNGLACTIVETEXTUREARBPROC)SDL_GL_GetProcAddress("glActiveTextureARB");
+        *(SDL_FunctionPointer*)&glActiveTextureARBFunc = SDL_GL_GetProcAddress("glActiveTextureARB");
 
         if (has_EGL_EXT_image_dma_buf_import &&
             glEGLImageTargetTexture2DOESFunc &&

@@ -182,7 +182,8 @@ bool SDL_Vulkan_Display_CreateSurface(void *vkGetInstanceProcAddr_,
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
     *(void **)&vkGetInstanceProcAddr = vkGetInstanceProcAddr_;
 #define VULKAN_INSTANCE_FUNCTION(name) \
-    PFN_##name name = (PFN_##name)vkGetInstanceProcAddr((VkInstance)instance, #name)
+    PFN_##name name; \
+    *(PFN_vkVoidFunction*)&name = vkGetInstanceProcAddr((VkInstance)instance, #name)
     VULKAN_INSTANCE_FUNCTION(vkEnumeratePhysicalDevices);
     VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceDisplayPropertiesKHR);
     VULKAN_INSTANCE_FUNCTION(vkGetDisplayModePropertiesKHR);
@@ -474,8 +475,9 @@ void SDL_Vulkan_DestroySurface_Internal(void *vkGetInstanceProcAddr_,
 {
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
     *(void **)&vkGetInstanceProcAddr = vkGetInstanceProcAddr_;
-    PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR =
-        (PFN_vkDestroySurfaceKHR)vkGetInstanceProcAddr(
+    PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+    *(SDL_FunctionPointer*)&vkDestroySurfaceKHR =
+        vkGetInstanceProcAddr(
             instance,
             "vkDestroySurfaceKHR");
 

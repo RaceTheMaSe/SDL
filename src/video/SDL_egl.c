@@ -172,7 +172,7 @@ typedef void (APIENTRY* PFNGLGETINTEGERVPROC) (GLenum pname, GLint * params);
 
 // it is allowed to not have some of the EGL extensions on start - attempts to use them will fail later.
 #define LOAD_FUNC_EGLEXT(TYPE, NAME) \
-    _this->egl_data->NAME = (TYPE)_this->egl_data->eglGetProcAddress(#NAME);
+    *(SDL_FunctionPointer*)&_this->egl_data->NAME = _this->egl_data->eglGetProcAddress(#NAME);
 
 static const char *SDL_EGL_GetErrorName(EGLint eglErrorCode)
 {
@@ -587,7 +587,7 @@ bool SDL_EGL_LoadLibrary(SDL_VideoDevice *_this, const char *egl_path, NativeDis
             SDL_free(attribs);
         } else {
             if (SDL_EGL_HasExtension(_this, SDL_EGL_CLIENT_EXTENSION, "EGL_EXT_platform_base")) {
-                _this->egl_data->eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)SDL_EGL_GetProcAddressInternal(_this, "eglGetPlatformDisplayEXT");
+                *(SDL_FunctionPointer*)&_this->egl_data->eglGetPlatformDisplayEXT = SDL_EGL_GetProcAddressInternal(_this, "eglGetPlatformDisplayEXT");
                 if (_this->egl_data->eglGetPlatformDisplayEXT) {
                     _this->egl_data->egl_display = _this->egl_data->eglGetPlatformDisplayEXT(platform, (void *)(uintptr_t)native_display, NULL);
                 }
@@ -1151,7 +1151,8 @@ SDL_GLContext SDL_EGL_CreateContext(SDL_VideoDevice *_this, EGLSurface egl_surfa
 #if defined(SDL_VIDEO_OPENGL) && !defined(SDL_VIDEO_DRIVER_VITA)
         } else {
             // Desktop OpenGL supports it by default from version 3.0 on.
-             PFNGLGETINTEGERVPROC glGetIntegervFunc = (PFNGLGETINTEGERVPROC)SDL_GL_GetProcAddress("glGetIntegerv");
+             PFNGLGETINTEGERVPROC glGetIntegervFunc;
+             *(SDL_FunctionPointer*)&glGetIntegervFunc = SDL_GL_GetProcAddress("glGetIntegerv");
             if (glGetIntegervFunc) {
                 GLint v = 0;
                 glGetIntegervFunc(GL_MAJOR_VERSION, &v);

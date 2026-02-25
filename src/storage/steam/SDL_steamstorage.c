@@ -284,7 +284,7 @@ static SDL_Storage *STEAM_User_Create(const char *org, const char *app, SDL_Prop
     }
 
     #define STEAM_PROC(ret, func, parms) \
-        steam->func = (steamfntype_##func) SDL_LoadFunction(steam->libsteam_api, #func); \
+        *(SDL_FunctionPointer*)&steam->func = SDL_LoadFunction(steam->libsteam_api, #func); \
         if (steam->func == NULL) { \
             SDL_SetError("Could not load function " #func); \
             goto steamfail; \

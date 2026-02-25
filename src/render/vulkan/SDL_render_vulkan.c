@@ -1402,11 +1402,11 @@ static VkResult VULKAN_CreateVertexBuffer(VULKAN_RenderData *rendererData, size_
 static bool VULKAN_LoadGlobalFunctions(VULKAN_RenderData *rendererData)
 {
 #define VULKAN_DEVICE_FUNCTION(name)
-#define VULKAN_GLOBAL_FUNCTION(name)                                                        \
-    name = (PFN_##name)rendererData->vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);          \
-    if (!name) {                                                                            \
-        SET_ERROR_MESSAGE("vkGetInstanceProcAddr(VK_NULL_HANDLE, \"" #name "\") failed");   \
-        return false;                                                                       \
+#define VULKAN_GLOBAL_FUNCTION(name)                                                             \
+    *(PFN_vkVoidFunction*)&name = rendererData->vkGetInstanceProcAddr(VK_NULL_HANDLE, #name);    \
+    if (!name) {                                                                                 \
+        SET_ERROR_MESSAGE("vkGetInstanceProcAddr(VK_NULL_HANDLE, \"" #name "\") failed");        \
+        return false;                                                                            \
     }
 #define VULKAN_INSTANCE_FUNCTION(name)
 #define VULKAN_OPTIONAL_INSTANCE_FUNCTION(name)
@@ -1425,14 +1425,14 @@ static bool VULKAN_LoadInstanceFunctions(VULKAN_RenderData *rendererData)
 {
 #define VULKAN_DEVICE_FUNCTION(name)
 #define VULKAN_GLOBAL_FUNCTION(name)
-#define VULKAN_INSTANCE_FUNCTION(name)                                                      \
-    name = (PFN_##name)rendererData->vkGetInstanceProcAddr(rendererData->instance, #name);  \
-    if (!name) {                                                                            \
-        SET_ERROR_MESSAGE("vkGetInstanceProcAddr(instance, \"" #name "\") failed");         \
-        return false;                                                                       \
+#define VULKAN_INSTANCE_FUNCTION(name)                                                                  \
+    *(PFN_vkVoidFunction*)&name = rendererData->vkGetInstanceProcAddr(rendererData->instance, #name);   \
+    if (!name) {                                                                                        \
+        SET_ERROR_MESSAGE("vkGetInstanceProcAddr(instance, \"" #name "\") failed");                     \
+        return false;                                                                                   \
     }
-#define VULKAN_OPTIONAL_INSTANCE_FUNCTION(name)                                             \
-    name = (PFN_##name)rendererData->vkGetInstanceProcAddr(rendererData->instance, #name);
+#define VULKAN_OPTIONAL_INSTANCE_FUNCTION(name)                                                         \
+    *(PFN_vkVoidFunction*)&name = rendererData->vkGetInstanceProcAddr(rendererData->instance, #name);
 #define VULKAN_OPTIONAL_DEVICE_FUNCTION(name)
 
     VULKAN_FUNCTIONS()
@@ -1448,14 +1448,14 @@ static bool VULKAN_LoadInstanceFunctions(VULKAN_RenderData *rendererData)
 static bool VULKAN_LoadDeviceFunctions(VULKAN_RenderData *rendererData)
 {
 #define VULKAN_DEVICE_FUNCTION(name)                                            \
-    name = (PFN_##name)vkGetDeviceProcAddr(rendererData->device, #name);        \
+    *(PFN_vkVoidFunction*)&name = vkGetDeviceProcAddr(rendererData->device, #name);        \
     if (!name) {                                                                \
         SET_ERROR_MESSAGE("vkGetDeviceProcAddr(device, \"" #name "\") failed"); \
         return false;                                                           \
     }
 #define VULKAN_GLOBAL_FUNCTION(name)
 #define VULKAN_OPTIONAL_DEVICE_FUNCTION(name)                                \
-    name = (PFN_##name)vkGetDeviceProcAddr(rendererData->device, #name);
+    *(PFN_vkVoidFunction*)&name = vkGetDeviceProcAddr(rendererData->device, #name);
 #define VULKAN_INSTANCE_FUNCTION(name)
 #define VULKAN_OPTIONAL_INSTANCE_FUNCTION(name)
     VULKAN_FUNCTIONS()
@@ -1762,7 +1762,7 @@ static VkResult VULKAN_CreateDeviceResources(SDL_Renderer *renderer, SDL_Propert
         SDL_LogDebug(SDL_LOG_CATEGORY_RENDER, "SDL_Vulkan_LoadLibrary failed" );
         return VK_ERROR_UNKNOWN;
     }
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = SDL_Vulkan_GetVkGetInstanceProcAddr();
     if(!vkGetInstanceProcAddr) {
         SDL_LogDebug(SDL_LOG_CATEGORY_RENDER, "vkGetInstanceProcAddr is NULL" );
         return VK_ERROR_UNKNOWN;

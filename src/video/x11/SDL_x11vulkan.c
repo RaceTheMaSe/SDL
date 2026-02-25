@@ -84,20 +84,20 @@ bool X11_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         return false;
     }
     SDL_strlcpy(_this->vulkan_config.loader_path, path, SDL_arraysize(_this->vulkan_config.loader_path));
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)SDL_LoadFunction(
+    *(PFN_vkVoidFunction*)&vkGetInstanceProcAddr = SDL_LoadFunction(
         _this->vulkan_config.loader_handle, "vkGetInstanceProcAddr");
     if (!vkGetInstanceProcAddr) {
         goto fail;
     }
     *(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
     _this->vulkan_config.vkEnumerateInstanceExtensionProperties = 
-        ((PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr)(
+        (*(PFN_vkGetInstanceProcAddr*)&_this->vulkan_config.vkGetInstanceProcAddr)(
             VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
     if (!_this->vulkan_config.vkEnumerateInstanceExtensionProperties) {
         goto fail;
     }
     extensions = SDL_Vulkan_CreateInstanceExtensionsList(
-        (PFN_vkEnumerateInstanceExtensionProperties)
+        *(PFN_vkEnumerateInstanceExtensionProperties*)&
             _this->vulkan_config.vkEnumerateInstanceExtensionProperties,
         &extensionCount);
     if (!extensions) {
@@ -131,8 +131,8 @@ bool X11_Vulkan_LoadLibrary(SDL_VideoDevice *_this, const char *path)
         if (!videoData->vulkan_xlib_xcb_library) {
             goto fail;
         }
-        videoData->vulkan_XGetXCBConnection =
-            (PFN_XGetXCBConnection)SDL_LoadFunction(videoData->vulkan_xlib_xcb_library, "XGetXCBConnection");
+        *(PFN_vkVoidFunction*)&videoData->vulkan_XGetXCBConnection =
+            SDL_LoadFunction(videoData->vulkan_xlib_xcb_library, "XGetXCBConnection");
         if (!videoData->vulkan_XGetXCBConnection) {
             SDL_UnloadObject(videoData->vulkan_xlib_xcb_library);
             goto fail;
@@ -194,11 +194,11 @@ bool X11_Vulkan_CreateSurface(SDL_VideoDevice *_this,
     if (!_this->vulkan_config.loader_handle) {
         return SDL_SetError("Vulkan is not loaded");
     }
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
+    *(SDL_FunctionPointer*)&vkGetInstanceProcAddr = _this->vulkan_config.vkGetInstanceProcAddr;
     if (videoData->vulkan_xlib_xcb_library) {
-        PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR =
-            (PFN_vkCreateXcbSurfaceKHR)vkGetInstanceProcAddr(instance,
-                                                             "vkCreateXcbSurfaceKHR");
+        PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
+        *(PFN_vkVoidFunction*)&vkCreateXcbSurfaceKHR =
+            vkGetInstanceProcAddr(instance, "vkCreateXcbSurfaceKHR");
         VkXcbSurfaceCreateInfoKHR createInfo;
         VkResult result;
         if (!vkCreateXcbSurfaceKHR) {
@@ -216,9 +216,9 @@ bool X11_Vulkan_CreateSurface(SDL_VideoDevice *_this,
             return SDL_SetError("vkCreateXcbSurfaceKHR failed: %s", SDL_Vulkan_GetResultString(result));
         }
     } else {
-        PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR =
-            (PFN_vkCreateXlibSurfaceKHR)vkGetInstanceProcAddr(instance,
-                                                              "vkCreateXlibSurfaceKHR");
+        PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+        *(PFN_vkVoidFunction*)&vkCreateXlibSurfaceKHR =
+            vkGetInstanceProcAddr(instance, "vkCreateXlibSurfaceKHR");
         VkXlibSurfaceCreateInfoKHR createInfo;
         VkResult result;
         if (!vkCreateXlibSurfaceKHR) {
@@ -260,7 +260,7 @@ bool X11_Vulkan_GetPresentationSupport(SDL_VideoDevice *_this,
     if (!_this->vulkan_config.loader_handle) {
         return SDL_SetError("Vulkan is not loaded");
     }
-    vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)_this->vulkan_config.vkGetInstanceProcAddr;
+    *(PFN_vkVoidFunction*)&vkGetInstanceProcAddr = _this->vulkan_config.vkGetInstanceProcAddr;
 
     forced_visual_id = SDL_GetHint(SDL_HINT_VIDEO_X11_WINDOW_VISUALID);
     if (forced_visual_id) {
@@ -270,8 +270,9 @@ bool X11_Vulkan_GetPresentationSupport(SDL_VideoDevice *_this,
     }
 
     if (videoData->vulkan_xlib_xcb_library) {
-        PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHR =
-            (PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)vkGetInstanceProcAddr(
+        PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHR;
+        *(PFN_vkVoidFunction*)&vkGetPhysicalDeviceXcbPresentationSupportKHR =
+            vkGetInstanceProcAddr(
                 instance,
                 "vkGetPhysicalDeviceXcbPresentationSupportKHR");
 
@@ -284,8 +285,9 @@ bool X11_Vulkan_GetPresentationSupport(SDL_VideoDevice *_this,
                                                             videoData->vulkan_XGetXCBConnection(videoData->display),
                                                             visualid);
     } else {
-        PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHR =
-            (PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR)vkGetInstanceProcAddr(
+        PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHR;
+        *(PFN_vkVoidFunction*)&vkGetPhysicalDeviceXlibPresentationSupportKHR =
+            vkGetInstanceProcAddr(
                 instance,
                 "vkGetPhysicalDeviceXlibPresentationSupportKHR");
 
