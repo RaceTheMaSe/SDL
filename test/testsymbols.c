@@ -68,8 +68,10 @@ extern SDL_DECLSPEC void SDLCALL JNI_OnLoad(void);
 
 #include <SDL3/SDL_openxr.h>
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcast-function-type-strict"
+#endif
 const static struct {
     const char *name;
     SDL_FunctionPointer address;
@@ -79,7 +81,9 @@ const static struct {
     #undef SDL_DYNAPI_PROC
     { NULL, NULL }
 };
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 static void print_usage(const char *argv0)
 {
